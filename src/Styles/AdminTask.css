@@ -1,0 +1,48 @@
+.task-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  h1, h2 {
+    text-align: center;
+  }
+  
+  form#taskForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  form#taskForm input, form#taskForm select, form#taskForm button {
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  #tasksTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  #tasksTable th, #tasksTable td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .edit-btn,
+  .delete-btn {
+    margin-right: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .edit-btn:hover {
+    background-color: #e7f3ff;
+  }
+  
+  .delete-btn:hover {
+    background-color: #fee2e6;
+  }
+  

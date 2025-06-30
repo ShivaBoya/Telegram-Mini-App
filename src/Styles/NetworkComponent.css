@@ -1,0 +1,393 @@
+Overall container
+.main-networkcontainer {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #f5f7fa;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Content Wrapper */
+.network-content {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* User Score */
+.network-score {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Invite Section & Rewards */
+.network-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.network-invite-section {
+  text-align: center;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.network-invite-section h2 {
+  margin-bottom: 25px;
+  font-size: 1.8em;
+  color: #222;
+}
+
+/* Rewards Info */
+.network-rewards-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f0f8ff;
+  border-radius: 10px;
+}
+
+.network-reward-card {
+  flex: 1;
+  text-align: center;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: 0 5px;
+}
+
+.network-reward-card h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.network-reward-value {
+  font-size: 26px;
+  font-weight: bold;
+  color: #0088cc;
+  margin: 8px 0;
+}
+
+.network-reward-text {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Invite Button */
+.network-invite-button {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 20px auto;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  background: #0088cc;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.network-invite-button:hover {
+  background: #006699;
+}
+
+/* Leaderboard Container & Table */
+.leaderboard-container {
+  margin: 30px auto;
+  max-width: 600px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-container h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.8em;
+  color: #222;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-table thead {
+  background-color: #0088cc;
+  color: #fff;
+}
+
+.leaderboard-table th, 
+.leaderboard-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.leaderboard-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.leaderboard-table tbody tr:hover {
+  background-color: #e9f5fc;
+}
+
+/* Game Button */
+.network-game-con {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.network-game-button {
+ 
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  width: 40%;
+  margin-left: 30%;
+  margin-bottom: 10px;
+  border: 2px solid #0088cc;
+  color: #0088cc;
+  border-radius: 5px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.network-game-button:hover {
+  background: #0088cc;
+  color: #fff;
+}
+
+/* Modal Styles (unchanged) */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  width: 90%;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #555;
+}
+
+.close-button:hover {
+  color: #000;
+}
+
+.qr-code {
+  margin: 20px auto;
+}
+
+.qr-code img {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.action-button {
+  background-color: #0088cc;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.action-button:hover {
+  background-color: #006699;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .network-rewards-info {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .network-reward-card {
+    width: 90%;
+    margin: 10px 0;
+  }
+  
+  .network-invite-button {
+    max-width: 250px;
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .qr-code img {
+    max-width: 200px;
+  }
+  
+  .action-button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .network-content {
+    padding: 15px;
+  }
+  
+  .network-invite-section,
+  .leaderboard-container {
+    padding: 15px;
+  }
+  
+  .network-invite-section h2,
+  .leaderboard-container h2 {
+    font-size: 1.5em;
+  }
+}
+
+@media (max-width: 600px) {
+  .network-rewards-info {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .network-reward-card {
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  .network-invite-button {
+    max-width: 250px;
+    font-size: 14px;
+    padding: 10px;
+  }
+  
+  .leaderboard-table th, 
+  .leaderboard-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .network-game-button {
+    width: 80%;
+    margin-left: 10%;
+  }
+}
+
+@media (max-width: 480px) {
+  .network-score {
+    font-size: 18px;
+  }
+  
+  .network-reward-value {
+    font-size: 22px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .qr-code img {
+    max-width: 180px;
+  }
+  
+  .action-button {
+    font-size: 14px;
+    padding: 10px;
+  }
+  
+  .network-invite-section h2,
+  .leaderboard-container h2 {
+    font-size: 1.3em;
+  }
+}
+
+@media (max-width: 375px) {
+  .leaderboard-table th, 
+  .leaderboard-table td {
+    padding: 6px;
+    font-size: 12px;
+  }
+  
+  .network-reward-card h3 {
+    font-size: 14px;
+  }
+  
+  .network-reward-text {
+    font-size: 12px;
+  }
+  
+  .network-reward-value {
+    font-size: 20px;
+  }
+}
+.dropdown-icon{
+  cursor: pointer;
+}

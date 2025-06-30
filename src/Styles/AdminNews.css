@@ -1,0 +1,273 @@
+
+:root {
+    --primary-color: #4caf50;
+    --secondary-color: #f44336;
+    --bg-color: #f4f6f8;
+    --text-color: #333;
+    --modal-bg: rgba(0, 0, 0, 0.5);
+    --white: #fff;
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  /* Main container */
+  .news-manager {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header */
+  .news-manager header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .news-manager header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--text-color);
+  }
+  
+  .add-news-btn {
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background var(--transition-speed), transform var(--transition-speed);
+  }
+  
+  .add-news-btn:hover {
+    background: #45a049;
+    transform: scale(1.02);
+  }
+  
+  /* News List Table */
+  .news-list-section {
+    overflow-x: auto;
+  }
+  
+  .news-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .news-table th,
+  .news-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .news-table th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+  }
+  
+  .news-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .news-table a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  .news-table a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Actions buttons in table */
+  .actions-cell button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-right: 5px;
+    padding: 5px 10px;
+    border-radius: var(--border-radius);
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+  
+  /* Edit Button */
+  .edit-btn {
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+  }
+  
+  .edit-btn:hover {
+    background: var(--primary-color);
+    color: var(--white);
+  }
+  
+  /* Delete Button */
+  .delete-btn {
+    color: var(--secondary-color);
+    border: 1px solid var(--secondary-color);
+  }
+  
+  .delete-btn:hover {
+    background: var(--secondary-color);
+    color: var(--white);
+  }
+  
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-color);
+  }
+  
+  /* Loading state */
+  .loading {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2rem;
+    color: var(--text-color);
+  }
+  
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--modal-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  
+  .modal-content {
+    background: var(--white);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  @keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--text-color);
+  }
+  
+  .modal-close {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-color);
+  }
+  
+  .modal-body {
+    margin-bottom: 20px;
+    color: var(--text-color);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .modal-actions button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background var(--transition-speed);
+  }
+  
+  .cancel-btn {
+    background: #bbb;
+    color: var(--white);
+  }
+  
+  .cancel-btn:hover {
+    background: #999;
+  }
+  
+  .submit-btn {
+    background: var(--primary-color);
+    color: var(--white);
+  }
+  
+  .submit-btn:hover {
+    background: #45a049;
+  }
+  
+  .delete-modal-btn {
+    background: var(--secondary-color);
+    color: var(--white);
+  }
+  
+  .delete-modal-btn:hover {
+    background: #d32f2f;
+  }
+  
