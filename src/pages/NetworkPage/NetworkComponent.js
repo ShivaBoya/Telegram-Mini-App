@@ -1139,7 +1139,6 @@ import { database } from "../../services/FirebaseConfig"
 import InviteModal from "./InviteModel"
 import { useTelegram } from "../../reactContext/TelegramContext"
 import { useReferral } from "../../reactContext/ReferralContext"
-import WelcomePopup from "./WelcomePopup"
 
 // Custom Button component
 const Button = ({ children, className = "", variant = "default", size = "default", onClick = () => {}, ...props }) => {
@@ -1252,7 +1251,7 @@ export default function NetworkComponent() {
   const [leaderboardHighest, setLeaderboardHighest] = useState([])
   const [isModalOpen, setModalOpen] = useState(false)
   // Initially no static invites; will load from database referrals.
-  const { inviteLink, invitedFriends, shareToTelegram, shareToWhatsApp, shareToTwitter, copyToClipboard , refferalPopup } =
+  const { inviteLink, invitedFriends, shareToTelegram, shareToWhatsApp, shareToTwitter, copyToClipboard } =
     useReferral()
   // New state variables for controlling expanded leaderboard views
   const [globalExpanded, setGlobalExpanded] = useState(false)
@@ -1811,7 +1810,6 @@ export default function NetworkComponent() {
             </Card>
           </div>
           <InviteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
-          {refferalPopup && <WelcomePopup />}
         </main>
       </div>
     </div>

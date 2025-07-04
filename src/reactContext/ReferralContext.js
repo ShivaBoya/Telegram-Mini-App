@@ -114,7 +114,6 @@ export const ReferralProvider = ({ children }) => {
   const [hasReferred, setHasReferred] = useState(false);
   const [inviteLink, setInviteLink] = useState('');
   const [invitedFriends, setInvitedFriends] = useState([]);
-  const [refferalPopup, setReferralPopup] = useState(false);
 
   // Parse referral param and award points once
   // useEffect(() => {
@@ -212,7 +211,6 @@ export const ReferralProvider = ({ children }) => {
     .then(() => {
       console.log('[Referral] addReferralRecord resolved – show popup');
       localStorage.setItem(key, 'done');
-      setReferralPopup(true);
       tg.showPopup({
         title: 'Referral Bonus!',
         message: 'You have earned 50 XP for joining through a referral!',
@@ -317,8 +315,7 @@ export const ReferralProvider = ({ children }) => {
       shareToTelegram, 
       shareToWhatsApp, 
       shareToTwitter,
-      copyToClipboard,
-      refferalPopup
+      copyToClipboard
     }}>
       {children}
     </ReferralContext.Provider>
