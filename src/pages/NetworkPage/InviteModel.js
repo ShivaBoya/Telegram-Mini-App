@@ -249,7 +249,7 @@ const InviteModal = ({ isOpen, onClose }) => {
         <div className="flex justify-center mb-6">
           <img
             id="qrCode"
-            src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://t.me/Web3NewsDevBot"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://t.me/Web3TodayBetabot"
             alt="QR Code"
             className="w-60 h-60 sm:w-64 sm:h-64"
           />
