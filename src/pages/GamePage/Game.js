@@ -49,6 +49,7 @@ const Game = ({ onGameOver, startGame }) => {
   const bombSoundRef = useRef(null);
   const goldenCoinIntervalRef = useRef(null);
   // Initialize mute state from localStorage.
+  //Mute state is initialized to false if not set in localStorage.
   const [isMuted, setIsMuted] = useState(() => localStorage.getItem("gameMuted") === "true");
 
   // Poll localStorage every 500ms.

@@ -193,6 +193,7 @@ function App() {
         tg.ready();
         tg.expand();
         const user = tg.initDataUnsafe.user;
+        
                    
         const fetchData = async () => {
           if (user) {
