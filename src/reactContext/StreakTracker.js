@@ -278,25 +278,26 @@ const StreakTracker = ({ children }) => {
             // If user data doesn't exist, initialize it with default streak values
             if (!userData) {
                 console.log("No user data found. Initializing new user and streak.");
-                const initialUserData = {
-                    name: user.first_name || "New User", // Using Telegram user info for name
-                    lastPlayed: Date.now(),
-                    lastUpdated: Date.now(),
-                    lastReset: { daily: getUTCDateString() }, // Initial daily reset for consistency
-                    Score: { /* ... default score values ... */ },
-                    streak: {
-                        currentStreakCount: 1,
-                        lastStreakCheckDateUTC: getUTCDateString(),
-                        longestStreakCount: 1
-                    },
-                };
-                await update(userRef, initialUserData); // Use update to merge, not set to avoid overwriting existing data
-                setCurrentStreak(1);
-                setLongestStreak(1);
-                setPopupMessage("🎉 Welcome! Your streak has started: 1 day!");
-                setPopupCurrentStreak(1);
-                setShowStreakPopup(true);
-                setLoadingStreak(false);
+                // const initialUserData = {
+                //     name: user.first_name || "New User", // Using Telegram user info for name
+                //     lastPlayed: Date.now(),
+                //     lastUpdated: Date.now(),
+                //     lastReset: { daily: getUTCDateString() }, // Initial daily reset for consistency
+                //     Score: { /* ... default score values ... */ },
+                //     streak: {
+                //         currentStreakCount: 1,
+                //         lastStreakCheckDateUTC: getUTCDateString(),
+                //         longestStreakCount: 1
+                //     },
+                // };
+                // await update(userRef, initialUserData); // Use update to merge, not set to avoid overwriting existing data
+                // setCurrentStreak(1);
+                // setLongestStreak(1);
+                // setPopupMessage("🎉 Welcome! Your streak has started: 1 day!");
+                // setPopupCurrentStreak(1);
+                // setShowStreakPopup(true);
+                // setLoadingStreak(false);
+                setLoadingStreak(false)
                 return; // Exit as we've initialized and set the first streak
             }
 
