@@ -139,4 +139,3 @@ const useFarming = () => {
 };
 
 export default useFarming;
-

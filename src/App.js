@@ -182,28 +182,6 @@ function AdminNavbar() {
   );
 }
 
-function requestFullscreen() {
-  const data = JSON.stringify({ eventType: 'web_app_request_fullscreen' });
-  if (window.TelegramWebviewProxy && window.TelegramWebviewProxy.postEvent) {
-    window.TelegramWebviewProxy.postEvent('web_app_request_fullscreen', '{}');
-  } else if (window.parent) {
-    window.parent.postMessage(data, 'https://web.telegram.org');
-  } else if (window.external && window.external.notify) {
-    window.external.notify(data);
-  }
-}
-
-function exitFullscreen() {
-  const data = JSON.stringify({ eventType: 'web_app_exit_fullscreen' });
-  if (window.TelegramWebviewProxy && window.TelegramWebviewProxy.postEvent) {
-    window.TelegramWebviewProxy.postEvent('web_app_exit_fullscreen', '{}');
-  } else if (window.parent) {
-    window.parent.postMessage(data, 'https://web.telegram.org');
-  } else if (window.external && window.external.notify) {
-    window.external.notify(data);
-  }
-}
-
 function App() {
   const {user}=useTelegram()
   const location = useLocation();
@@ -330,4 +308,3 @@ function App() {
 }
 
 export default App;
-export { exitFullscreen };
