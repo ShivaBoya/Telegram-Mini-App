@@ -1,3 +1,4 @@
+// Main application component with routing, context providers, and daily/weekly task resets
 // import React, {useEffect} from 'react';
 // import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
 // import './App.css';

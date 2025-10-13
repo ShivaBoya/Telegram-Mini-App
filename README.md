@@ -1,70 +1,189 @@
-# Getting Started with Create React App
+# Telegram Mini App - Web3 Gaming Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive Telegram Mini App built with React that combines gaming, farming, task management, and Web3 wallet integration with TON blockchain support.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+- **Gaming System**: Interactive game with Firebase integration and streak tracking
+- **Farming Component**: Virtual farming with reward system
+- **Task Management**: Daily and weekly tasks with point rewards
+- **Network/Referral System**: User invitation and referral tracking
+- **Web3 Wallet**: TON Connect integration for blockchain transactions
+- **Admin Panel**: Task and news management for administrators
+- **User Profile**: History tracking and streak management
+- **News System**: Dynamic news feed with admin controls
 
-### `npm start`
+## 📁 Project Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Core Files
+- **`package.json`** - Project dependencies including React 19, Firebase, TON Connect, Tailwind CSS, and Framer Motion
+- **`package-lock.json`** - Dependency lock file ensuring consistent installs across environments
+- **`.gitignore`** - Git ignore rules for node_modules, build files, and environment variables
+- **`README.md`** - Project documentation and setup instructions
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Configuration Files
+- **`postcss.config.js`** - PostCSS configuration for Tailwind CSS and Autoprefixer
+- **`tailwind.config.js`** - Tailwind CSS configuration for custom styling and responsive design
 
-### `npm test`
+### Public Assets
+- **`public/`** - Static assets including HTML template, manifest files, and audio resources
+  - **`index.html`** - Main HTML template with Telegram Web App and TON Connect scripts
+  - **`manifest.json`** - PWA manifest for app installation
+  - **`tonconnect-manifest.json`** - TON Connect wallet integration manifest
+  - **`backgroundmusic.mp3`** - Background music for gaming experience
+  - **`slicesound.mp3`** - Sound effects for game interactions
+  - **`slicesoundbomb.mp3`** - Explosion sound effects for game
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Source Code
+- **`src/`** - Main application source code
+  - **`App.js`** - Main application component with routing, context providers, and daily/weekly task resets
+  - **`index.js`** - Application entry point and React DOM rendering
+  - **`App.css`** - Global application styles
+  - **`index.css`** - Base styles and Tailwind CSS imports
 
-### `npm run build`
+### Components
+- **`components/`** - Reusable UI components
+  - **`Navbar.js`** - Main navigation component with route-based visibility
+  - **`Footer.js`** - Application footer component
+  - **`Sidebar.js`** - Side navigation component
+  - **`ui/`** - Custom UI components (avatar, badge, button, card, progress)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Pages
+- **`pages/`** - Application pages and features
+  - **`HomePage/HomeComponent.js`** - Landing page with user dashboard
+  - **`GamePage/`** - Gaming system with Firebase integration and streak tracking
+  - **`FarmPage/`** - Virtual farming component with reward mechanics
+  - **`TaskPage/`** - Task management system with daily/weekly tasks
+  - **`NetworkPage/`** - Referral and invitation system
+  - **`WalletPage/`** - TON Connect wallet integration
+  - **`ProfilePage/`** - User profile and history management
+  - **`NewsPage/`** - News feed with admin controls
+  - **`AdminTask.js`** - Admin panel for task management
+  - **`AdminNews.js`** - Admin panel for news management
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Context & State Management
+- **`reactContext/`** - React context providers for global state
+  - **`TelegramContext.js`** - Telegram Web App integration and user data
+  - **`WalletContext.js`** - TON Connect wallet state management
+  - **`ReferralContext.js`** - Referral system state management
+  - **`HistoryContext.js`** - User activity history tracking
+  - **`StreakTracker.js`** - Gaming streak tracking and rewards
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Services
+- **`services/`** - Backend integration and utility services
+  - **`FirebaseConfig.js`** - Firebase configuration and database setup
+  - **`userManagement.js`** - User initialization and management
+  - **`addHistory.js`** - History logging service
 
-### `npm run eject`
+### Styles
+- **`Styles/`** - Component-specific CSS files for custom styling
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🛠️ Tech Stack
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Frontend**: React 19, React Router DOM
+- **Styling**: Tailwind CSS, PostCSS, Framer Motion
+- **Backend**: Firebase (Realtime Database, Authentication)
+- **Web3**: TON Connect, TON blockchain integration
+- **UI Components**: Radix UI, Lucide React, React Icons
+- **Testing**: React Testing Library, Jest
+- **Build Tools**: Create React App, Vercel deployment
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🚀 Getting Started
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+- Firebase project setup
+- TON Connect manifest configuration
 
-## Learn More
+### Installation
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd Telegram-Mini-App
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. Install dependencies:
+```bash
+npm install
+```
 
-### Code Splitting
+3. Configure environment variables:
+```bash
+# Create .env file with your Firebase and TON Connect credentials
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. Start the development server:
+```bash
+npm start
+```
 
-### Analyzing the Bundle Size
+5. Open [http://localhost:3000](http://localhost:3000) to view the app
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Available Scripts
 
-### Making a Progressive Web App
+- **`npm start`** - Runs the app in development mode
+- **`npm test`** - Launches the test runner
+- **`npm run build`** - Builds the app for production
+- **`npm run eject`** - Ejects from Create React App (one-way operation)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 🔧 Configuration
 
-### Advanced Configuration
+### Firebase Setup
+1. Create a Firebase project
+2. Enable Realtime Database
+3. Update `src/services/FirebaseConfig.js` with your config
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### TON Connect Setup
+1. Configure your wallet manifest in `public/tonconnect-manifest.json`
+2. Update TON Connect settings in wallet components
 
-### Deployment
+### Telegram Web App
+1. Configure your bot with Telegram
+2. Set up the Web App URL in your bot settings
+3. The app automatically integrates with Telegram Web App API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 📱 Features Overview
 
-### `npm run build` fails to minify
+### Gaming System
+- Interactive gameplay with sound effects
+- Streak tracking and rewards
+- Firebase integration for score persistence
+- Game over popups and instructions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Task Management
+- Daily and weekly task system
+- Point-based reward system
+- Admin panel for task management
+- Automatic task resets
+
+### Web3 Integration
+- TON Connect wallet integration
+- Blockchain transaction support
+- Wallet state management
+- TON token support
+
+### User Management
+- Telegram user integration
+- Referral system
+- Activity history tracking
+- Profile management
+
+## 🚀 Deployment
+
+The app is configured for deployment on Vercel. Simply connect your repository to Vercel and deploy.
+
+## 📄 License
+
+This project is private and proprietary.
+
+## 🤝 Contributing
+
+This is a private project. For any issues or suggestions, please contact the development team.
+
+---
+
+**Last Updated**: Octobar 2025  
+**Version**: 0.1.0  
+**Maintainer**: Raju VB
