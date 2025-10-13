@@ -1,5 +1,4 @@
 {
-  // Project dependencies including React 19, Firebase, TON Connect, Tailwind CSS, and Framer Motion
   "name": "admin-app",
   "version": "0.1.0",
   "private": true,
