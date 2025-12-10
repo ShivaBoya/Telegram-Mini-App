@@ -25,14 +25,23 @@ const firebaseConfig = {
   // measurementId: "G-KGYC5JJ7Y0"
 
   //Basvaraju SDk -(****amvadde0393@gmail.com)
-  apiKey: "AIzaSyAEZMcO5Gaq6FKEo_Za2tNHHvfKsDlGTzA",
-  authDomain: "web3news-dca1f.firebaseapp.com",
-  databaseURL: "https://web3news-dca1f-default-rtdb.firebaseio.com",
-  projectId: "web3news-dca1f",
-  storageBucket: "web3news-dca1f.firebasestorage.app",
-  messagingSenderId: "501919675960",
-  appId: "1:501919675960:web:85868df5ee8ef1a77858cd",
-  measurementId: "G-NFVZBFX2QE"
+  // apiKey: "AIzaSyAEZMcO5Gaq6FKEo_Za2tNHHvfKsDlGTzA",
+  // authDomain: "web3news-dca1f.firebaseapp.com",
+  // databaseURL: "https://web3news-dca1f-default-rtdb.firebaseio.com",
+  // projectId: "web3news-dca1f",
+  // storageBucket: "web3news-dca1f.firebasestorage.app",
+  // messagingSenderId: "501919675960",
+  // appId: "1:501919675960:web:85868df5ee8ef1a77858cd",
+  // measurementId: "G-NFVZBFX2QE"
+
+  // Shiva SDK - (*****siddu142@gmail.com)
+  apiKey: "AIzaSyBMuFb65LlplogJ5148FF_at86PiNZF54w",
+  authDomain: "telegram-mini-web-app.firebaseapp.com",
+  projectId: "telegram-mini-web-app",
+  storageBucket: "telegram-mini-web-app.firebasestorage.app",
+  messagingSenderId: "689935323364",
+  appId: "1:689935323364:web:5d5cf083b50357778a5cf1",
+  measurementId: "G-YBBKWDCB0V"
   
 }
 
