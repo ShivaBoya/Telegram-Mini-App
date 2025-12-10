@@ -19,7 +19,7 @@ export const TelegramProvider = ({ children }) => {
       const tg = window.Telegram.WebApp;
       tg.ready();
       tg.expand();
-   
+
 
       if (tg.initDataUnsafe?.user) {
         const { id, first_name, last_name, username, photo_url } = tg.initDataUnsafe.user;
@@ -28,12 +28,19 @@ export const TelegramProvider = ({ children }) => {
           username: (first_name || "") + " " + (last_name || "") || username || "Anonymous",
           photo_url: photo_url || "",
         });
+      } else {
+        // Fallback for local development
+        setUser({
+          id: 123456789,
+          username: "Test User",
+          photo_url: "https://ui-avatars.com/api/?name=Test+User&background=random",
+        });
       }
     }
   }, []);
 
   useEffect(() => {
-    if (!user.id) return; 
+    if (!user.id) return;
 
     const scoreRef = ref(database, `users/${user.id}/Score`);
 

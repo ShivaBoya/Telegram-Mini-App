@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import {
-    getDatabase
-    } from 'firebase/database';
+  getDatabase
+} from 'firebase/database';
 
 const firebaseConfig = {
   //--hemangi ma'am sdk
@@ -37,12 +37,13 @@ const firebaseConfig = {
   // Shiva SDK - (*****siddu142@gmail.com)
   apiKey: "AIzaSyBMuFb65LlplogJ5148FF_at86PiNZF54w",
   authDomain: "telegram-mini-web-app.firebaseapp.com",
+  databaseURL: "https://telegram-mini-web-app-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "telegram-mini-web-app",
   storageBucket: "telegram-mini-web-app.firebasestorage.app",
   messagingSenderId: "689935323364",
   appId: "1:689935323364:web:5d5cf083b50357778a5cf1",
   measurementId: "G-YBBKWDCB0V"
-  
+
 }
 
 
@@ -51,4 +52,4 @@ const database = getDatabase(app)
 
 
 
-export{app,database}
+export { app, database }
