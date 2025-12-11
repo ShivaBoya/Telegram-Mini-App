@@ -54,7 +54,7 @@ import { useTelegram } from "../../reactContext/TelegramContext.js";
 
 
 const InstructionsPopup = ({ show, onStart, onBack }) => {
-  const { scores } = useTelegram();
+  const { user, scores } = useTelegram();
   const navigate = useNavigate();
   if (!show) return null;
   return (
@@ -90,9 +90,20 @@ const InstructionsPopup = ({ show, onStart, onBack }) => {
           </div>
         </div>
         <div className="popup-footer flex justify-center items-center">
-        
-          <button className=" bg-via-purple-500  px-6 py-2 rounded transition hover:bg-transparent border hover:border-white hover:text-white mt-4 text-gray-100 font-bold" onClick={onStart} disabled={scores?.no_of_tickets === 0}>
-            OK, Let's Play! 🎟️{scores?.no_of_tickets || 0}
+
+          <button
+            className={`px-6 py-2 rounded transition border font-bold mt-4 text-gray-100 ${(user?.id && (!scores || scores.no_of_tickets === 0))
+              ? "bg-gray-500 cursor-not-allowed opacity-50"
+              : "bg-via-purple-500 hover:bg-transparent hover:border-white hover:text-white"
+              }`}
+            onClick={onStart}
+            disabled={user?.id && (!scores || scores?.no_of_tickets === 0)}
+          >
+            {(!scores && user?.id)
+              ? "Loading..."
+              : scores?.no_of_tickets === 0
+                ? "No Tickets 🎟️"
+                : `OK, Let's Play! 🎟️${scores?.no_of_tickets || ""}`}
           </button>
         </div>
       </div>

@@ -2,10 +2,19 @@ import React, { useRef, useEffect, useState } from "react";
 import { ref, get, update } from "firebase/database";
 import { database } from "../../services/FirebaseConfig";
 import { useTelegram } from "../../reactContext/TelegramContext.js";
-import { addHistoryLog } from "../../services/addHistory.js"
+import { addHistoryLog } from "../../services/addHistory.js";
+
+// Audio Assets
+import sliceSoundSrc from "../../assets/audio/slicesound.mp3";
+import bombSoundSrc from "../../assets/audio/slicesoundbomb.mp3";
+import bgMusicSrc from "../../assets/audio/backgroundmusic.mp3";
 
 // Define updateGameScoresWrapper as a function declaration so it’s hoisted.
 async function updateGameScoresWrapper(currentGameScore, userId) {
+  if (!userId) {
+    console.log("Dev Mode: Score not saved (No User ID)");
+    return;
+  }
 
   const userRef = ref(database, `users/${userId}/Score`);
   try {
@@ -416,7 +425,11 @@ const Game = ({ onGameOver, startGame }) => {
     timerIntervalRef.current = setInterval(() => {
       if (!gameOverRef.current) {
         timeRemainingRef.current--;
-        document.getElementById("timer").textContent = `Time: ${timeRemainingRef.current}`;
+        const timerEl = document.getElementById("timer");
+        if (timerEl) {
+          timerEl.textContent = `Time: ${timeRemainingRef.current}`;
+        }
+
         if (timeRemainingRef.current <= 0) {
           clearInterval(timerIntervalRef.current);
           endGame();
@@ -675,10 +688,10 @@ const Game = ({ onGameOver, startGame }) => {
 
   // ─── EVENT LISTENERS & SOUND PRELOADING ─────────────────────────
   useEffect(() => {
-    backgroundMusicRef.current = new Audio("/backgroundmusic.mp3");
+    backgroundMusicRef.current = new Audio(bgMusicSrc);
     backgroundMusicRef.current.loop = true;
-    sliceSoundRef.current = new Audio("/slicesound.mp3");
-    bombSoundRef.current = new Audio("/slicesoundbomb.mp3");
+    sliceSoundRef.current = new Audio(sliceSoundSrc);
+    bombSoundRef.current = new Audio(bombSoundSrc);
 
     backgroundMusicRef.current.muted = isMuted;
     sliceSoundRef.current.muted = isMuted;
@@ -812,8 +825,13 @@ const Game = ({ onGameOver, startGame }) => {
     scoreRef.current = 0;
     timeRemainingRef.current = 45;
     gameOverRef.current = false;
-    document.getElementById("score").textContent = `Score: ${scoreRef.current}`;
-    document.getElementById("timer").textContent = `Time: ${timeRemainingRef.current}`;
+
+    const scoreEl = document.getElementById("score");
+    if (scoreEl) scoreEl.textContent = `Score: ${scoreRef.current}`;
+
+    const timerEl = document.getElementById("timer");
+    if (timerEl) timerEl.textContent = `Time: ${timeRemainingRef.current}`;
+
     clearInterval(gameLoopRef.current);
     clearInterval(spawnIntervalRef.current);
     clearInterval(timerIntervalRef.current);
@@ -859,7 +877,7 @@ const Game = ({ onGameOver, startGame }) => {
     };
   }, []);
 
-  return <canvas id="gameCanvas" ref={canvasRef} />;
+  return <canvas id="gameCanvas" ref={canvasRef} style={{ display: 'block', width: '100vw', height: '100vh', touchAction: 'none' }} />;
 };
 
 export default Game;

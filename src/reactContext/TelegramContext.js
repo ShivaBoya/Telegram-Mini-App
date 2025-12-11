@@ -28,13 +28,6 @@ export const TelegramProvider = ({ children }) => {
           username: (first_name || "") + " " + (last_name || "") || username || "Anonymous",
           photo_url: photo_url || "",
         });
-      } else {
-        // Fallback for local development
-        setUser({
-          id: 123456789,
-          username: "Test User",
-          photo_url: "https://ui-avatars.com/api/?name=Test+User&background=random",
-        });
       }
     }
   }, []);

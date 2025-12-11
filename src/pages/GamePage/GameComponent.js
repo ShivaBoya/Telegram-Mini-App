@@ -45,7 +45,7 @@
 //         onRestart={handleRestart}
 //       />
 
-      
+
 //     </div>
 //   );
 // }
@@ -69,20 +69,20 @@ function GameComponent() {
   const [finalScore, setFinalScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [gameKey, setGameKey] = useState(0); // used for remounting on restart
-  const { user } = useTelegram();
+  const { user, scores } = useTelegram();
 
-  
+
   const decreaseTicketCount = async (userId) => {
     if (!userId) return;
-  
+
     const ticketRef = ref(database, `users/${userId}/Score/no_of_tickets`);
-  
+
     try {
       const snapshot = await get(ticketRef);
-      
+
       if (snapshot.exists()) {
         let currentTickets = snapshot.val();
-        
+
         if (currentTickets > 0) {
           await update(ref(database, `users/${userId}/Score`), {
             no_of_tickets: currentTickets - 1,
@@ -100,13 +100,18 @@ function GameComponent() {
   }
 
   const handleStartGame = () => {
+    // If user exists, check tickets. If invalid user (Dev mode), allow play.
+    if (user?.id && (!scores || scores.no_of_tickets <= 0)) {
+      console.warn("Cannot start game: No tickets");
+      return;
+    }
     setGameStarted(true);
     setGameOver(false);
-    
 
-    let userId = user.id
-    decreaseTicketCount(userId)
-
+    if (user?.id) {
+      let userId = user.id
+      decreaseTicketCount(userId)
+    }
   };
 
   const handleGameOver = (score, high) => {
@@ -116,13 +121,13 @@ function GameComponent() {
   };
 
   const handleRestart = () => {
-    setGameKey((prev) => prev + 1); 
+    setGameKey((prev) => prev + 1);
     setGameStarted(false);
     setGameOver(false);
     const taskRef = ref(database, `connections/${user.id}/tasks/daily`);
 
     try {
-       update(taskRef, { game: true }); // or set to false depending on logic
+      update(taskRef, { game: true }); // or set to false depending on logic
       console.log("Game task updated in Firebase ✅");
     } catch (error) {
       console.error("Error updating game task in Firebase:", error);
@@ -151,7 +156,7 @@ function GameComponent() {
       />
 
     </div>
-    
+
   );
 }
 

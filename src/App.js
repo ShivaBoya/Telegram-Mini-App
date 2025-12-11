@@ -193,19 +193,7 @@ function App() {
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
-    let user = tg.initDataUnsafe.user;
-
-    // Mock user for local development if not in Telegram
-    if (!user) {
-      console.warn("Running in local dev mode: Using mock user");
-      user = {
-        id: 123456789,
-        first_name: "Test",
-        last_name: "User",
-        username: "testuser",
-        photo_url: "https://ui-avatars.com/api/?name=Test+User&background=random"
-      };
-    }
+    const user = tg.initDataUnsafe.user;
 
     const fetchData = async () => {
       if (user) {

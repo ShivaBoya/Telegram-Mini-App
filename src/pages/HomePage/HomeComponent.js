@@ -198,13 +198,13 @@
 //             <div className="text-[10px] font-medium text-white"></div>
 //             <div className="flex items-center gap-1">
 //               <div className="w-4 h-2.5">
-                
+
 //               </div>
 //               <div className="w-3 h-3">
-               
+
 //               </div>
 //               <div className="w-3 h-3">
-                
+
 //               </div>
 //             </div>
 //           </div>
@@ -509,7 +509,7 @@ import { Badge } from "../../components/ui/badge";
 import { motion } from "framer-motion";
 import { Progress } from "../../components/ui/progress";
 import FarmingButton from "../FarmPage/FarmingButton.js";
-import  useFarming  from '../FarmPage/UseFarming.js';
+import useFarming from '../FarmPage/UseFarming.js';
 import { useStreak } from "../../reactContext/StreakTracker.js";
 import WelcomePopup from "../NetworkPage/WelcomePopup";
 import { useReferral } from "../../reactContext/ReferralContext";
@@ -517,7 +517,7 @@ import { useReferral } from "../../reactContext/ReferralContext";
 export default function HomeComponent() {
   const navigate = useNavigate();
   const { user, scores } = useTelegram();
-   const { showWelcomePopup, setShowWelcomePopup } = useReferral();
+  const { showWelcomePopup, setShowWelcomePopup } = useReferral();
 
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
   const [isFarming, setIsFarming] = useState(false);
@@ -556,7 +556,7 @@ export default function HomeComponent() {
       imageUrl: "https://i.postimg.cc/59XXZV1c/NFT-Image.jpg",
       readTime: "2 min",
     },
-    
+
     {
       id: 4,
       title: "Bitcoin Mining Becomes More Sustainable",
@@ -743,9 +743,9 @@ export default function HomeComponent() {
           {/* Header: only profile related card */}
           <header className="sticky top-0 z-10 bg-white/10 backdrop-blur-md border-b border-white/20 p-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3 cursor-pointer" onClick={()=>navigate("/profile")}>
+              <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/profile")}>
                 <Avatar className="h-12 w-12 border-2 border-white/30">
-                  <AvatarImage src={user.photo_url} alt="User" />
+                  <AvatarImage src={user.photo_url || null} alt="User" />
                   <AvatarFallback className="text-lg"></AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
@@ -758,11 +758,11 @@ export default function HomeComponent() {
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-white text-md">🔥{currentStreak}</span>
-                
+
                 <Button variant="ghost" size="icon" className="rounded-full text-white hover:bg-white/10">
                   <Bell className="h-5 w-5" />
                 </Button>
-                
+
                 {/* <Button variant="ghost" size="icon" className="rounded-full text-white hover:bg-white/10">
                   <Menu className="h-5 w-5" />
                 </Button> */}
@@ -836,8 +836,8 @@ export default function HomeComponent() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -100 }}
                 className="mb-6 cursor-pointer"
-                onClick={()=>navigate("/news")}
-                
+                onClick={() => navigate("/news")}
+
               >
                 <Card className="rounded-none overflow-hidden border-none shadow-lg bg-white/10 backdrop-blur-md">
                   <div className="relative">
@@ -951,18 +951,18 @@ export default function HomeComponent() {
                 <CardContent className="p-4">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-bold text-white">Daily Tasks</h3>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-indigo-200 font-medium hover:bg-indigo-500/20 flex justify-between items-center"
-                        onClick={()=>navigate("/tasks")}
-                      >
-                        View All
-                        <ChevronRight className="h-4 w-4 ml-1" />
-                      </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-indigo-200 font-medium hover:bg-indigo-500/20 flex justify-between items-center"
+                      onClick={() => navigate("/tasks")}
+                    >
+                      View All
+                      <ChevronRight className="h-4 w-4 ml-1" />
+                    </Button>
                   </div>
                   <div className="space-y-3 ">
-                    <div className="flex items-center justify-between p-2 bg-white/5 rounded-lg border border-white/10 cursor-pointer" onClick={()=>navigate("/news")}>
+                    <div className="flex items-center justify-between p-2 bg-white/5 rounded-lg border border-white/10 cursor-pointer" onClick={() => navigate("/news")}>
                       <div className="flex items-center gap-3">
                         <div className="bg-indigo-500/30 p-2 rounded-full">
                           <Zap className="h-4 w-4 text-indigo-200" />
@@ -974,7 +974,7 @@ export default function HomeComponent() {
                       </div>
                       <Badge className="bg-indigo-600/80 text-white">+25 XP</Badge>
                     </div>
-                    <div className="flex items-center justify-between p-2 bg-white/5 rounded-lg border border-white/10 cursor-pointer"onClick={()=>navigate("/network")}>
+                    <div className="flex items-center justify-between p-2 bg-white/5 rounded-lg border border-white/10 cursor-pointer" onClick={() => navigate("/network")}>
                       <div className="flex items-center gap-3">
                         <div className="bg-amber-500/30 p-2 rounded-full">
                           <Users className="h-4 w-4 text-amber-200" />
@@ -993,7 +993,7 @@ export default function HomeComponent() {
           </main>
         </div>
       </div>
-       {showWelcomePopup && (
+      {showWelcomePopup && (
         <WelcomePopup onClose={() => setShowWelcomePopup(false)} />
       )}
     </div>
