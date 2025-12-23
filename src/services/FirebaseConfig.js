@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import {
-    getDatabase
-    } from 'firebase/database';
+  getDatabase
+} from 'firebase/database';
 
 const firebaseConfig = {
   //--hemangi ma'am sdk
@@ -25,15 +25,25 @@ const firebaseConfig = {
   // measurementId: "G-KGYC5JJ7Y0"
 
   //Basvaraju SDk -(****amvadde0393@gmail.com)
-  apiKey: "AIzaSyAEZMcO5Gaq6FKEo_Za2tNHHvfKsDlGTzA",
-  authDomain: "web3news-dca1f.firebaseapp.com",
-  databaseURL: "https://web3news-dca1f-default-rtdb.firebaseio.com",
-  projectId: "web3news-dca1f",
-  storageBucket: "web3news-dca1f.firebasestorage.app",
-  messagingSenderId: "501919675960",
-  appId: "1:501919675960:web:85868df5ee8ef1a77858cd",
-  measurementId: "G-NFVZBFX2QE"
-  
+  // apiKey: "AIzaSyAEZMcO5Gaq6FKEo_Za2tNHHvfKsDlGTzA",
+  // authDomain: "web3news-dca1f.firebaseapp.com",
+  // databaseURL: "https://web3news-dca1f-default-rtdb.firebaseio.com",
+  // projectId: "web3news-dca1f",
+  // storageBucket: "web3news-dca1f.firebasestorage.app",
+  // messagingSenderId: "501919675960",
+  // appId: "1:501919675960:web:85868df5ee8ef1a77858cd",
+  // measurementId: "G-NFVZBFX2QE"
+
+
+  apiKey: "AIzaSyD03YRikMYZnnncwJWyjDf2wVFer-vukqU",
+  authDomain: "telegram-e84b9.firebaseapp.com",
+  projectId: "telegram-e84b9",
+  storageBucket: "telegram-e84b9.firebasestorage.app",
+  messagingSenderId: "18200002246",
+  appId: "1:18200002246:web:df225386da8cf6d53861c7",
+  measurementId: "G-90BTGM8R0N"
+
+
 }
 
 
@@ -42,4 +52,4 @@ const database = getDatabase(app)
 
 
 
-export{app,database}
+export { app, database }
