@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, useRef } from 'react';
 import { TonConnectUI } from '@tonconnect/ui';
-import {addHistoryLog} from "../services/addHistory.js"
+import { addHistoryLog } from "../services/addHistory.js"
 
 
 // Create context
@@ -10,8 +10,8 @@ const WalletContext = createContext({
   tonBalance: null,
   usdEquivalent: null,
   transactions: [],
-  connectWallet: () => {},
-  disconnectWallet: () => {},
+  connectWallet: () => { },
+  disconnectWallet: () => { },
   isLoading: false
 });
 
@@ -21,16 +21,16 @@ export const useWallet = () => useContext(WalletContext);
 
 export const WalletProvider = ({ children }) => {
   // State
-  const [isConnected, setIsConnected] = useState(() => 
+  const [isConnected, setIsConnected] = useState(() =>
     localStorage.getItem('wallet_connected') === 'true'
   );
-  const [walletAddress, setWalletAddress] = useState(() => 
+  const [walletAddress, setWalletAddress] = useState(() =>
     localStorage.getItem('wallet_address') || ''
   );
-  const [tonBalance, setTonBalance] = useState(() => 
+  const [tonBalance, setTonBalance] = useState(() =>
     localStorage.getItem('ton_balance') || null
   );
-  const [usdEquivalent, setUsdEquivalent] = useState(() => 
+  const [usdEquivalent, setUsdEquivalent] = useState(() =>
     localStorage.getItem('usd_equivalent') || null
   );
   const [transactions, setTransactions] = useState(() => {
@@ -38,10 +38,10 @@ export const WalletProvider = ({ children }) => {
     return savedTxs ? JSON.parse(savedTxs) : [];
   });
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Ref to store TonConnectUI instance
   const tonConnectUIRef = useRef(null);
-  
+
   // Initialize TonConnect
   useEffect(() => {
     const initializeTonConnect = async () => {
@@ -51,14 +51,14 @@ export const WalletProvider = ({ children }) => {
           tonConnectUIRef.current = new TonConnectUI({
             manifestUrl: 'https://webs3-newapp.vercel.app/tonconnect-manifest.json'
           });
-          
+
           // Set up status change listener
           tonConnectUIRef.current.onStatusChange(async (walletInfo) => {
             if (walletInfo && walletInfo.account) {
               const address = walletInfo.account.address.account_address || walletInfo.account.address;
               setWalletAddress(address);
               setIsConnected(true);
-              
+
               // Update wallet data
               await updateWalletData(address);
             } else {
@@ -67,16 +67,16 @@ export const WalletProvider = ({ children }) => {
             }
           });
         }
-        
+
         // Check if wallet is already connected
-        const walletInfo = tonConnectUIRef.current.getWalletInfo();
-        
+        const walletInfo = tonConnectUIRef.current.wallet;
+
         if (walletInfo && walletInfo.account) {
           // Wallet is connected
           const address = walletInfo.account.address.account_address || walletInfo.account.address;
           setWalletAddress(address);
           setIsConnected(true);
-          
+
           // Update wallet data
           await updateWalletData(address);
         } else if (isConnected && walletAddress) {
@@ -88,10 +88,10 @@ export const WalletProvider = ({ children }) => {
         console.error("Error initializing TonConnect:", error);
       }
     };
-    
+
     initializeTonConnect();
   }, []);
-  
+
   // Save state to localStorage
   useEffect(() => {
     if (walletAddress) {
@@ -100,7 +100,7 @@ export const WalletProvider = ({ children }) => {
       localStorage.removeItem('wallet_address');
     }
   }, [walletAddress]);
-  
+
   useEffect(() => {
     if (isConnected) {
       localStorage.setItem('wallet_connected', 'true');
@@ -108,7 +108,7 @@ export const WalletProvider = ({ children }) => {
       localStorage.removeItem('wallet_connected');
     }
   }, [isConnected]);
-  
+
   useEffect(() => {
     if (tonBalance) {
       localStorage.setItem('ton_balance', tonBalance);
@@ -116,7 +116,7 @@ export const WalletProvider = ({ children }) => {
       localStorage.removeItem('ton_balance');
     }
   }, [tonBalance]);
-  
+
   useEffect(() => {
     if (usdEquivalent) {
       localStorage.setItem('usd_equivalent', usdEquivalent);
@@ -124,7 +124,7 @@ export const WalletProvider = ({ children }) => {
       localStorage.removeItem('usd_equivalent');
     }
   }, [usdEquivalent]);
-  
+
   useEffect(() => {
     if (transactions.length > 0) {
       localStorage.setItem('wallet_transactions', JSON.stringify(transactions));
@@ -132,7 +132,7 @@ export const WalletProvider = ({ children }) => {
       localStorage.removeItem('wallet_transactions');
     }
   }, [transactions]);
-  
+
   // Fetch wallet balance
   async function fetchWalletBalance(address) {
     try {
@@ -148,7 +148,7 @@ export const WalletProvider = ({ children }) => {
       return null;
     }
   }
-  
+
   // Fetch exchange rate
   async function fetchExchangeRate() {
     try {
@@ -166,7 +166,7 @@ export const WalletProvider = ({ children }) => {
       return 0;
     }
   }
-  
+
   // Fetch transactions
   async function fetchTransactions(address) {
     try {
@@ -176,7 +176,7 @@ export const WalletProvider = ({ children }) => {
       if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
       if (!data.result || !Array.isArray(data.result)) return [];
-      
+
       return data.result.map(tx => ({
         ...tx,
         fee: tx.fee ? Number(tx.fee) / 1e9 : 0,
@@ -188,10 +188,10 @@ export const WalletProvider = ({ children }) => {
             : tx.in_msg,
         out_msgs: Array.isArray(tx.out_msgs)
           ? tx.out_msgs.map(msg =>
-              msg.value
-                ? { ...msg, value: Number(msg.value) / 1e9 }
-                : msg
-            )
+            msg.value
+              ? { ...msg, value: Number(msg.value) / 1e9 }
+              : msg
+          )
           : []
       }));
     } catch (error) {
@@ -199,19 +199,19 @@ export const WalletProvider = ({ children }) => {
       return [];
     }
   }
-  
+
   // Update wallet data
   const updateWalletData = async (address) => {
     if (!address) return;
-    
+
     try {
       setIsLoading(true);
-      
+
       // Fetch balance
       const balance = await fetchWalletBalance(address);
       if (balance !== null) {
         setTonBalance(balance.toFixed(4));
-        
+
         // Fetch exchange rate and calculate USD equivalent
         const exchangeRate = await fetchExchangeRate();
         setUsdEquivalent((balance * exchangeRate).toFixed(2));
@@ -219,7 +219,7 @@ export const WalletProvider = ({ children }) => {
         setTonBalance('Error');
         setUsdEquivalent('0.00');
       }
-      
+
       // Fetch transactions
       const txs = await fetchTransactions(address);
       setTransactions(txs);
@@ -229,7 +229,7 @@ export const WalletProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
-  
+
   // Clear wallet data
   const clearWalletData = () => {
     setIsConnected(false);
@@ -237,7 +237,7 @@ export const WalletProvider = ({ children }) => {
     setTonBalance(null);
     setUsdEquivalent(null);
     setTransactions([]);
-    
+
     // Clear localStorage
     localStorage.removeItem('wallet_address');
     localStorage.removeItem('wallet_connected');
@@ -245,32 +245,32 @@ export const WalletProvider = ({ children }) => {
     localStorage.removeItem('usd_equivalent');
     localStorage.removeItem('wallet_transactions');
   };
-  
+
   // Connect wallet
   const connectWallet = async (userId) => {
     if (!tonConnectUIRef.current) return;
-    
+
     try {
       setIsLoading(true);
       await tonConnectUIRef.current.openModal();
-      const textData ={
-                  action: 'Wallet Successfully Connected',
-                  points: 10,
-                  type: 'wallet',
+      const textData = {
+        action: 'Wallet Successfully Connected',
+        points: 10,
+        type: 'wallet',
       }
-          
-      addHistoryLog(userId,textData)    
+
+      addHistoryLog(userId, textData)
     } catch (error) {
       console.error("Error connecting wallet:", error);
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   // Disconnect wallet
   const disconnectWallet = async () => {
     if (!tonConnectUIRef.current) return;
-    
+
     try {
       setIsLoading(true);
       await tonConnectUIRef.current.disconnect();
@@ -281,7 +281,7 @@ export const WalletProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
-  
+
   // Expose methods and state to components
   const value = {
     isConnected,
@@ -293,7 +293,7 @@ export const WalletProvider = ({ children }) => {
     disconnectWallet,
     isLoading
   };
-  
+
   return (
     <WalletContext.Provider value={value}>
       {children}

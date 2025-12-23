@@ -90,9 +90,9 @@ const InstructionsPopup = ({ show, onStart, onBack }) => {
           </div>
         </div>
         <div className="popup-footer flex justify-center items-center">
-        
-          <button className=" bg-via-purple-500  px-6 py-2 rounded transition hover:bg-transparent border hover:border-white hover:text-white mt-4 text-gray-100 font-bold" onClick={onStart} disabled={scores?.no_of_tickets === 0}>
-            OK, Let's Play! 🎟️{scores?.no_of_tickets || 0}
+
+          <button className=" bg-via-purple-500  px-6 py-2 rounded transition hover:bg-transparent border hover:border-white hover:text-white mt-4 text-gray-100 font-bold" onClick={onStart} disabled={scores && scores.no_of_tickets === 0}>
+            {scores ? `OK, Let's Play! 🎟️${scores.no_of_tickets}` : "OK, Let's Play! (Free Play)"}
           </button>
         </div>
       </div>

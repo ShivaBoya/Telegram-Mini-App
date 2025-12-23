@@ -43,13 +43,13 @@
 
 // function App() {
 //   const {user}=useTelegram()
-  
+
 //   useEffect(() => {
 //         const tg = window.Telegram.WebApp;
 //         tg.ready();
 //         tg.expand();
 //         const user = tg.initDataUnsafe.user;
-                   
+
 //         const fetchData = async () => {
 //           if (user) {
 //             await initializeUser(user);
@@ -58,54 +58,54 @@
 //           }
 //         };
 //         fetchData();
-        
-         
+
+
 //   }, []);
 //   useEffect(()=>{
-    
+
 //     resetTasksIfNeeded(user.id)
 //   },[user.id])
 
 //   const resetTasksIfNeeded = async (userId) => {
 //     if (!userId) return;
-  
+
 //     const today = format(new Date(), "yyyy-MM-dd");
-  
+
 //     // Reference to the user's connection data
 //     const connectionRef = ref(database, `users/${userId}`);
 //     const snapshot = await get(connectionRef);
 //     const data = snapshot.val();
-  
+
 //     if (!data) return;
-  
+
 //     const updates = {};
-  
+
 //     // Daily Reset
 //     if (data.lastReset?.daily !== today) {
 //       // Remove daily tasks
 
 //       await update(ref(database, `connections/${userId}/tasks`), {daily:{}});
-      
+
 //       // Update lastReset/daily under connections
 //       updates[`users/${userId}/lastReset/daily`] = today;
-  
+
 //       // Set no_of_tickets to 3 under users
 //       updates[`users/${userId}/Score/no_of_tickets`] = 3;
 //     }
-  
+
 //     // Weekly Reset (only on Monday)
 //     const weekDay = new Date().getDay(); // 0 = Sunday, 1 = Monday, ...
 //     if (data.lastReset?.weekly !== today && weekDay === 1) {
 //       await remove(ref(database, `connections/${userId}/tasks/weekly`));
 //       // updates[`connections/${userId}/lastReset/weekly`] = today;
 //     }
-  
+
 //     // Apply updates only if there are changes
 //     if (Object.keys(updates).length > 0) {
 //       await update(ref(database), updates); // Must update from root
 //     }
 //   };
-  
+
 //   return (
 //     <WalletProvider>
 //       <Router>
@@ -134,7 +134,7 @@
 // export default App;
 
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
 import './App.css';
 import AdminTask from './pages/AdminTask';
@@ -146,20 +146,20 @@ import NewsComponent from "./pages/NewsPage/NewsComponent"
 import WalletComponent from './pages/WalletPage/WalletComponent';
 import TaskComponent from './pages/TaskPage/TaskComponent';
 import HomeComponent from './pages/HomePage/HomeComponent';
-import {useTelegram} from "./reactContext/TelegramContext.js"
+import { useTelegram } from "./reactContext/TelegramContext.js"
 import { initializeUser } from "./services/userManagement.js";
 import Navbar from './components/Navbar.js';
 import TaskUIComponent from "./pages/TaskPage/TaskUIComponent.js"
 import UserProfile from "./pages/ProfilePage/UserProfile.js"
-import History  from "./pages/ProfilePage/History.js";
+import History from "./pages/ProfilePage/History.js";
 // Import the WalletProvider
 import { WalletProvider } from './reactContext/WalletContext.js';
-import {ReferralProvider} from "./reactContext/ReferralContext.js"
-import { ref, get, update,remove } from "firebase/database";
+import { ReferralProvider } from "./reactContext/ReferralContext.js"
+import { ref, get, update, remove } from "firebase/database";
 import { database } from "./services/FirebaseConfig.js"
 import { format } from 'date-fns'; // optional, for date formatting
-import {addHistoryLog} from "./services/addHistory.js"
-import {HistoryProvider} from "./reactContext/HistoryContext.js"
+import { addHistoryLog } from "./services/addHistory.js"
+import { HistoryProvider } from "./reactContext/HistoryContext.js"
 import StreakTracker, { useStreak } from './reactContext/StreakTracker.js';
 import StreakPopup from "./pages/streakPopup.js";
 
@@ -173,7 +173,7 @@ function AdminNavbar() {
   return (
     <nav className="navbar-admin">
       <ul className="nav-admin-links">
-        
+
         <li className='nav-li-items-admin'>
           <Link to="/admintask">Admin Task</Link>
           <Link to="/adminNews">Admin News</Link>
@@ -184,54 +184,54 @@ function AdminNavbar() {
 }
 
 function App() {
-  const {user}=useTelegram()
+  const { user } = useTelegram()
   const location = useLocation();
-    const { showStreakPopup, popupMessage, popupCurrentStreak, closeStreakPopup } = useStreak()|| {} ;
+  const { showStreakPopup, popupMessage, popupCurrentStreak, closeStreakPopup } = useStreak() || {};
 
-  
+
   useEffect(() => {
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-        const user = tg.initDataUnsafe.user;
-        
-                   
-        const fetchData = async () => {
-          if (user) {
-            await initializeUser(user);
-          } else {
-            console.error("User data not available");
-          }
-        };
-        fetchData();
-        
-         
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+    const user = tg.initDataUnsafe.user;
+
+
+    const fetchData = async () => {
+      if (user) {
+        await initializeUser(user);
+      } else {
+        console.warn("User data not available - App is likely running outside Telegram or in Dev mode");
+      }
+    };
+    fetchData();
+
+
   }, []);
-  useEffect(()=>{
-    
+  useEffect(() => {
+
     resetTasksIfNeeded(user.id)
-  },[user.id])
+  }, [user.id])
 
   const resetTasksIfNeeded = async (userId) => {
     if (!userId) return;
-  
+
     const today = format(new Date(), "yyyy-MM-dd");
-  
+
     // Reference to the user's connection data
     const connectionRef = ref(database, `users/${userId}`);
     const snapshot = await get(connectionRef);
     const data = snapshot.val();
-  
+
     if (!data) return;
-  
+
     const updates = {};
-  
+
     // Daily Reset
     if (data.lastReset?.daily !== today) {
       // Remove daily tasks
 
-      await update(ref(database, `connections/${userId}/tasks`), {daily:{}});
-      
+      await update(ref(database, `connections/${userId}/tasks`), { daily: {} });
+
       // Update lastReset/daily under connections
       updates[`users/${userId}/lastReset/daily`] = today;
 
@@ -240,18 +240,18 @@ function App() {
       const snapshot = await get(userRef)
 
       console.log(snapshot.val())
-  
+
       // Set no_of_tickets to 3 under users
       updates[`users/${userId}/Score/no_of_tickets`] = 3;
-      const textData ={
+      const textData = {
         action: 'Daily login reward',
         points: 10,
         type: 'Home',
       }
 
-      addHistoryLog(userId,textData)
+      addHistoryLog(userId, textData)
     }
-  
+
     // Weekly Reset (only on Monday)
     const weekDay = new Date().getDay(); // 0 = Sunday, 1 = Monday, ...
     if (data.lastReset?.weekly !== today && weekDay === 1) {
@@ -259,51 +259,51 @@ function App() {
       await update(ref(database, `history/${userId}`), {});
       // updates[`connections/${userId}/lastReset/weekly`] = today;
     }
-  
+
     // Apply updates only if there are changes
     if (Object.keys(updates).length > 0) {
       await update(ref(database), updates); // Must update from root
     }
   };
-  
+
   const hideNavbarRoutes = ['/game'];
   const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
-  
+
   return (
     <WalletProvider>
-    <ReferralProvider>
-    <HistoryProvider>
-      <StreakTracker>
-        <>
-          <div className="App mb-3 flex flex-col min-h-screen">
-            <AdminNavbar />
-            <div className="content flex-1">
-              <Routes>
-                <Route path="/" element={<HomeComponent />} />
-                <Route path="/profile" element={<UserProfile/>} />
-                <Route path="/game" element={<GameComponent />} />
-                <Route path="/network" element={<NetworkComponent />} />
-                <Route path="/news" element={<NewsComponent />} />
-                <Route path="/tasks" element={<TaskUIComponent />} />
-                <Route path="/history" element={<History/>} />
-                <Route path="/wallet" element={<WalletComponent />} />
-                <Route path="/admintask" element={<AdminTask />} />
-                <Route path="/adminNews" element={<AdminNews />} />
-              </Routes>
-            </div>
-            {shouldShowNavbar && <Navbar/>}
-          </div>        
-          <StreakPopup
-            show={showStreakPopup}
-            message={popupMessage}
-            currentStreak={popupCurrentStreak}
-            onClose={closeStreakPopup}
-        />
-        </>
+      <ReferralProvider>
+        <HistoryProvider>
+          <StreakTracker>
+            <>
+              <div className="App mb-3 flex flex-col min-h-screen">
+                <AdminNavbar />
+                <div className="content flex-1">
+                  <Routes>
+                    <Route path="/" element={<HomeComponent />} />
+                    <Route path="/profile" element={<UserProfile />} />
+                    <Route path="/game" element={<GameComponent />} />
+                    <Route path="/network" element={<NetworkComponent />} />
+                    <Route path="/news" element={<NewsComponent />} />
+                    <Route path="/tasks" element={<TaskUIComponent />} />
+                    <Route path="/history" element={<History />} />
+                    <Route path="/wallet" element={<WalletComponent />} />
+                    <Route path="/admintask" element={<AdminTask />} />
+                    <Route path="/adminNews" element={<AdminNews />} />
+                  </Routes>
+                </div>
+                {shouldShowNavbar && <Navbar />}
+              </div>
+              <StreakPopup
+                show={showStreakPopup}
+                message={popupMessage}
+                currentStreak={popupCurrentStreak}
+                onClose={closeStreakPopup}
+              />
+            </>
 
-        </StreakTracker>
+          </StreakTracker>
         </HistoryProvider>
-    </ReferralProvider>
+      </ReferralProvider>
     </WalletProvider>
   );
 }
