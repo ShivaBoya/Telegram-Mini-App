@@ -1,7 +1,7 @@
 {
-  "url": "https://webs3-newapp.vercel.app/",
-  "name": "WebS3 New",
-  "iconUrl": "https://webs3-newapp.vercel.app/icon.png",
-  "termsUrl": "https://webs3-newapp.vercel.app/terms",
-  "privacyUrl": "https://webs3-newapp.vercel.app/privacy"
+  "url": "https://telegram-mini-app-1.vercel.app",
+  "name": "Telegram Mini App",
+  "iconUrl": "https://telegram-mini-app-1.vercel.app/logo192.png",
+  "termsOfUseUrl": "https://telegram-mini-app-1.vercel.app/terms",
+  "privacyPolicyUrl": "https://telegram-mini-app-1.vercel.app/privacy"
 }

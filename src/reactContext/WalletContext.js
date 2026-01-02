@@ -48,8 +48,11 @@ export const WalletProvider = ({ children }) => {
       try {
         // Create TonConnectUI instance if it doesn't exist
         if (!tonConnectUIRef.current) {
+          const manifestUrl = `${window.location.origin}/tonconnect-manifest.json`;
+          console.log("Initializing TonConnect with manifest:", manifestUrl);
+
           tonConnectUIRef.current = new TonConnectUI({
-            manifestUrl: 'https://webs3-newapp.vercel.app/tonconnect-manifest.json'
+            manifestUrl: manifestUrl
           });
 
           // Set up status change listener

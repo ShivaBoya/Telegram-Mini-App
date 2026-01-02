@@ -200,7 +200,7 @@ function App() {
       if (user) {
         await initializeUser(user);
       } else {
-        console.warn("User data not available - App is likely running outside Telegram or in Dev mode");
+        console.info("Dev mode: User data not available");
       }
     };
     fetchData();

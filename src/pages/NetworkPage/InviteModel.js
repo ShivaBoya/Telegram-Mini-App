@@ -185,212 +185,95 @@
 // src/components/InviteModel.js
 
 
-// import { useEffect, useState } from "react"
-// import { useReferral } from "../../reactContext/ReferralContext"
-// import { useTelegram } from "../../reactContext/TelegramContext"
-
-// const InviteModal = ({ isOpen, onClose }) => {
-//   const { inviteLink, shareToTelegram, copyToClipboard } = useReferral()
-//   const { user } = useTelegram()
-//   const [copied, setCopied] = useState(false)
-
-//   const tg = window.Telegram.WebApp
-
-//   // Close modal when Escape key is pressed
-//   useEffect(() => {
-//     const handleEscape = (e) => {
-//       if (e.key === "Escape" && isOpen) {
-//         onClose()
-//       }
-//     }
-
-//     window.addEventListener("keydown", handleEscape)
-//     return () => window.removeEventListener("keydown", handleEscape)
-//   }, [isOpen, onClose])
-
-//   // Prevent scrolling when modal is open
-//   useEffect(() => {
-//     if (isOpen) {
-//       document.body.style.overflow = "hidden"
-//     } else {
-//       document.body.style.overflow = "auto"
-//     }
-
-//     return () => {
-//       document.body.style.overflow = "auto"
-//     }
-//   }, [isOpen])
-
-//   if (!isOpen) return null
-
-//   const handleCopy = async () => {
-//     const success = await copyToClipboard()
-//     if (success) {
-//       setCopied(true)
-//       tg.showPopup({ title: "Success", message: "Invite link copied!", buttons: [{ type: "ok" }] })
-//       setTimeout(() => setCopied(false), 2000)
-//     }
-//   }
-
-//   const handleTelegramShare = () => {
-//     shareToTelegram()
-//     onClose()
-//   }
-
-//   return (
-//     <div id="inviteModal" className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-//       <div className="bg-gradient-to-br bg-white/10 backdrop-blur-sm px-5 py-5 rounded-lg shadow-lg max-w-md w-full">
-//         <div className="flex justify-between items-center mb-6">
-//           <div className="text-2xl font-semibold text-gray-100">Invite a friend</div>
-//           <button className="text-gray-100 hover:text-red-500 text-2xl font-bold" onClick={onClose}>
-//             ×
-//           </button>
-//         </div>
-//         <div className="flex justify-center mb-6">
-//           <img
-//             id="qrCode"
-//             src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://t.me/Web3today_bot"
-//             alt="QR Code"
-//             className="w-60 h-60 sm:w-64 sm:h-64"
-//           />
-//         </div>
-//         <div className="flex flex-col sm:flex-row gap-3">
-//           <button className="bg-pink-500/20 px-3 text-white py-2 h-12 font-bold rounded" onClick={handleTelegramShare}>
-//             Send
-//           </button>
-//           <button
-//             className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 h-12 font-bold rounded"
-//             onClick={handleCopy}
-//           >
-//             Copy link
-//           </button>
-//           <button
-//             className="w-full text-white border-white/20 bg-white/5 flex flex-col items-center py-3 hover:bg-gray-500 font-bold"
-//             onClick={onClose}
-//           >
-//             Close
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default InviteModal
-
-
-
-
-// src/components/InviteModal.jsx
-import { useEffect, useState } from "react";
-import { useReferral } from "../../reactContext/ReferralContext";
-import { useTelegram } from "../../reactContext/TelegramContext";
+import { useEffect, useState } from "react"
+import { useReferral } from "../../reactContext/ReferralContext"
+import { useTelegram } from "../../reactContext/TelegramContext"
 
 const InviteModal = ({ isOpen, onClose }) => {
-  const { inviteLink, shareToTelegram, copyToClipboard } = useReferral();
-  const { user } = useTelegram();
-  const [copied, setCopied] = useState(false);
+  const { inviteLink, shareToTelegram, copyToClipboard } = useReferral()
+  const { user } = useTelegram()
+  const [copied, setCopied] = useState(false)
 
-  const tg = window.Telegram.WebApp;
+  const tg = window.Telegram.WebApp
 
-  // Close on Escape
+  // Close modal when Escape key is pressed
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === "Escape" && isOpen) {
-        onClose();
+        onClose()
       }
-    };
-    window.addEventListener("keydown", handleEscape);
-    return () => window.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
+    }
 
-  // Prevent scroll
+    window.addEventListener("keydown", handleEscape)
+    return () => window.removeEventListener("keydown", handleEscape)
+  }, [isOpen, onClose])
+
+  // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = "hidden"
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "auto"
     }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
 
-  if (!isOpen) return null;
+    return () => {
+      document.body.style.overflow = "auto"
+    }
+  }, [isOpen])
+
+  if (!isOpen) return null
 
   const handleCopy = async () => {
-    const success = await copyToClipboard();
+    const success = await copyToClipboard()
     if (success) {
-      setCopied(true);
-      tg.showPopup({
-        title: "Success",
-        message: "Invite link copied!",
-        buttons: [{ type: "ok" }],
-      });
-      setTimeout(() => setCopied(false), 2000);
+      setCopied(true)
+      tg.showPopup({ title: "Success", message: "Invite link copied!", buttons: [{ type: "ok" }] })
+      setTimeout(() => setCopied(false), 2000)
     }
-  };
+  }
 
   const handleTelegramShare = () => {
-    shareToTelegram();
-    onClose();
-  };
-
-  // Generate QR using clean inviteLink
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(inviteLink)}`;
+    shareToTelegram()
+    onClose()
+  }
 
   return (
-    <div
-      id="inviteModal"
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4"
-    >
-      <div className="bg-gradient-to-br from-gray-900/95 to-black/90 backdrop-blur-sm px-6 py-6 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-700">
-        <div className="flex justify-between items-center mb-5">
-          <h2 className="text-xl font-bold text-white">Invite a Friend</h2>
-          <button
-            className="text-gray-400 hover:text-red-500 text-2xl font-bold"
-            onClick={onClose}
-          >
-            &times;
+    <div id="inviteModal" className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+      <div className="bg-gradient-to-br bg-white/10 backdrop-blur-sm px-5 py-5 rounded-lg shadow-lg max-w-md w-full">
+        <div className="flex justify-between items-center mb-6">
+          <div className="text-2xl font-semibold text-gray-100">Invite a friend</div>
+          <button className="text-gray-100 hover:text-red-500 text-2xl font-bold" onClick={onClose}>
+            ×
           </button>
         </div>
-
         <div className="flex justify-center mb-6">
           <img
             id="qrCode"
-            src={qrCodeUrl}
-            alt="Referral QR Code"
-            className="w-56 h-56 sm:w-60 sm:h-60 rounded-xl border border-gray-600"
-            onError={(e) => {
-              console.error("QR code failed to load", e);
-            }}
+            src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://t.me/Web3today_bot"
+            alt="QR Code"
+            className="w-60 h-60 sm:w-64 sm:h-64"
           />
         </div>
-
-        <div className="flex flex-col sm:flex-row gap-3 mb-4">
-          <button
-            className="bg-blue-600/20 hover:bg-blue-600/30 text-white py-3 h-12 font-bold rounded-lg flex-1 transition"
-            onClick={handleTelegramShare}
-          >
-            Send via Telegram
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button className="bg-pink-500/20 px-3 text-white py-2 h-12 font-bold rounded" onClick={handleTelegramShare}>
+            Send
           </button>
           <button
-            className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 text-white py-3 h-12 font-bold rounded-lg flex-1 transition"
+            className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 h-12 font-bold rounded"
             onClick={handleCopy}
           >
-            {copied ? "Copied!" : "Copy Link"}
+            Copy link
+          </button>
+          <button
+            className="w-full text-white border-white/20 bg-white/5 flex flex-col items-center py-3 hover:bg-gray-500 font-bold"
+            onClick={onClose}
+          >
+            Close
           </button>
         </div>
-
-        <button
-          className="w-full text-gray-300 border border-gray-700/50 bg-gray-800/30 hover:bg-gray-700/50 py-2.5 rounded-lg font-medium transition text-sm"
-          onClick={onClose}
-        >
-          Close
-        </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default InviteModal;
+export default InviteModal

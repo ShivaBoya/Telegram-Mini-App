@@ -19,7 +19,7 @@ export const TelegramProvider = ({ children }) => {
       const tg = window.Telegram.WebApp;
       tg.ready();
       tg.expand();
-   
+
 
       if (tg.initDataUnsafe?.user) {
         const { id, first_name, last_name, username, photo_url } = tg.initDataUnsafe.user;
@@ -33,7 +33,7 @@ export const TelegramProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!user.id) return; 
+    if (!user.id) return;
 
     const scoreRef = ref(database, `users/${user.id}/Score`);
 
@@ -65,3 +65,4 @@ export const useTelegram = () => {
   }
   return context;
 };
+
