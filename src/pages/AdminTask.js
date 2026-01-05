@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {  ref, push, set, update, onValue, remove } from 'firebase/database';
-import {database} from "../services/FirebaseConfig";
+import { ref, push, set, update, onValue, remove } from 'firebase/database';
+import { database } from "../services/FirebaseConfig";
 import "../Styles/AdminTask.css"
 
 
@@ -10,7 +10,7 @@ const AdminTask = () => {
     title: '',
     description: '',
     type: '',
-    score: '',
+    points: '',
     videoUrl: '',
   });
   const [tasks, setTasks] = useState([]);
@@ -41,7 +41,7 @@ const AdminTask = () => {
   }, []);
 
   const resetForm = () => {
-    setTaskForm({ title: '', description: '', type: '', score: '', videoUrl: '' });
+    setTaskForm({ title: '', description: '', type: '', points: '', videoUrl: '' });
     setEditingTaskId(null);
   };
 
@@ -51,24 +51,24 @@ const AdminTask = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { title, description, type, score, videoUrl } = taskForm;
-    if (title && type && score) {
+    const { title, description, type, points, videoUrl } = taskForm;
+    if (title && type && points) {
       if (editingTaskId) {
-        updateTask(editingTaskId, title, description, type, parseInt(score, 10), videoUrl);
+        updateTask(editingTaskId, title, description, type, parseInt(points, 10), videoUrl);
       } else {
-        createTask(title, description, type, parseInt(score, 10), videoUrl);
+        createTask(title, description, type, parseInt(points, 10), videoUrl);
       }
     }
   };
 
-  const createTask = (title, description, type, score, videoUrl) => {
+  const createTask = (title, description, type, points, videoUrl) => {
     const tasksRef = ref(database, 'tasks');
     const newTaskRef = push(tasksRef);
     const taskData = {
       title,
       description,
       type,
-      score,
+      points,
       videoUrl,
       createdAt: new Date().toISOString(),
     };
@@ -83,14 +83,14 @@ const AdminTask = () => {
       });
   };
 
-  const updateTask = (taskId, title, description, type, score, videoUrl) => {
+  const updateTask = (taskId, title, description, type, points, videoUrl) => {
     const taskRef = ref(database, 'tasks/' + taskId);
 
     update(taskRef, {
       title,
       description,
       type,
-      score,
+      points,
       videoUrl,
       updatedAt: new Date().toISOString(),
     })
@@ -110,7 +110,7 @@ const AdminTask = () => {
         title: task.title,
         description: task.description || '',
         type: task.type,
-        score: task.score.toString(),
+        points: (task.points || task.score || 0).toString(),
         videoUrl: task.videoUrl || ''
       });
       setEditingTaskId(taskId);
@@ -163,9 +163,9 @@ const AdminTask = () => {
         </select>
         <input
           type="number"
-          name="score"
-          placeholder="Enter task score"
-          value={taskForm.score}
+          name="points"
+          placeholder="Enter task points"
+          value={taskForm.points}
           onChange={handleChange}
           required
         />
@@ -193,18 +193,18 @@ const AdminTask = () => {
               <th>TaskId</th>
               <th>Title</th>
               <th>Type</th>
-              <th>Score</th>
+              <th>Points</th>
               <th>Description</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {tasks.map((taskItem,index) => (
+            {tasks.map((taskItem, index) => (
               <tr key={taskItem.id}>
-                <td>{index+1}</td>
+                <td>{index + 1}</td>
                 <td>{taskItem.title}</td>
                 <td>{taskItem.type}</td>
-                <td>{taskItem.score}</td>
+                <td>{taskItem.points || taskItem.score}</td>
                 <td>{taskItem.description}</td>
                 <td>
                   <button

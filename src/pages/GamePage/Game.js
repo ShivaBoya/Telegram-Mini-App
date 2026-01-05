@@ -81,6 +81,9 @@ const Game = ({ onGameOver, startGame }) => {
   const shineParticlesRef = useRef([]);
   const slicedFruitParticlesRef = useRef([]);
   const floatingTextsRef = useRef([]);
+  // New refs for bonus effect timers
+  const bonusIntervalRef = useRef(null);
+  const bonusTimeoutRef = useRef(null);
 
   // Helper function to pick a bonus fruit emoji (allowed fruits only).
   function getBonusEmoji() {
@@ -131,6 +134,7 @@ const Game = ({ onGameOver, startGame }) => {
     }
     resetPosition() {
       const canvas = canvasRef.current;
+      if (!canvas) return;
       if (this.isBonus) {
         // Bonus fruits appear anywhere on the canvas.
         this.x = Math.random() * (canvas.width - this.size);
@@ -195,6 +199,7 @@ const Game = ({ onGameOver, startGame }) => {
       }
       // Remove fruit if it goes off-screen.
       if (
+        !canvasRef.current ||
         this.x > canvasRef.current.width ||
         this.x + this.size < 0 ||
         this.y > canvasRef.current.height
@@ -362,9 +367,9 @@ const Game = ({ onGameOver, startGame }) => {
     document.body.appendChild(timerElement);
 
     // Update the timer every second
-    const countdownInterval = setInterval(() => {
+    bonusIntervalRef.current = setInterval(() => {
       timeLeft--;
-      timerElement.textContent = `${timeLeft}`;
+      if (timerElement) timerElement.textContent = `${timeLeft}`;
 
       // Add a pulse animation effect
       timerElement.style.animation = "none";
@@ -373,8 +378,8 @@ const Game = ({ onGameOver, startGame }) => {
     }, 1000);
 
     // After 5 seconds, remove bonus fruits, timer element, and resume normal spawn.
-    setTimeout(() => {
-      clearInterval(countdownInterval);
+    bonusTimeoutRef.current = setTimeout(() => {
+      clearInterval(bonusIntervalRef.current);
       if (document.body.contains(timerElement)) {
         document.body.removeChild(timerElement);
       }
@@ -390,6 +395,8 @@ const Game = ({ onGameOver, startGame }) => {
     clearInterval(spawnIntervalRef.current);
     clearInterval(timerIntervalRef.current);
     clearInterval(goldenCoinIntervalRef.current);
+    clearInterval(bonusIntervalRef.current);
+    clearTimeout(bonusTimeoutRef.current);
     if (backgroundMusicRef.current) {
       backgroundMusicRef.current.pause();
       backgroundMusicRef.current.currentTime = 0;
@@ -403,7 +410,8 @@ const Game = ({ onGameOver, startGame }) => {
     timerIntervalRef.current = setInterval(() => {
       if (!gameOverRef.current) {
         timeRemainingRef.current--;
-        document.getElementById("timer").textContent = `Time: ${timeRemainingRef.current}`;
+        const timerEl = document.getElementById("timer");
+        if (timerEl) timerEl.textContent = `Time: ${timeRemainingRef.current}`;
         if (timeRemainingRef.current <= 0) {
           clearInterval(timerIntervalRef.current);
           endGame();
@@ -477,20 +485,23 @@ const Game = ({ onGameOver, startGame }) => {
       if (snapshot.exists()) {
         const userData = snapshot.val();
         highScoreRef.current = userData.game_highest_score || 0;
-        document.getElementById("high_score").textContent = `High: ${highScoreRef.current}`;
+        const hsEl = document.getElementById("high_score");
+        if (hsEl) hsEl.textContent = `High: ${highScoreRef.current}`;
       } else {
         highScoreRef.current = 0;
-        document.getElementById("high_score").textContent = `High: 0`;
+        const hsEl = document.getElementById("high_score");
+        if (hsEl) hsEl.textContent = `High: 0`;
       }
     } catch (error) {
       console.error("Error fetching high score from Firebase:", error);
       highScoreRef.current = 0;
-      document.getElementById("high_score").textContent = `High: 0`;
+      const hsEl = document.getElementById("high_score");
+      if (hsEl) hsEl.textContent = `High: 0`;
     }
   };
 
   const spawnFruit = () => {
-    if (!gameOverRef.current) {
+    if (!gameOverRef.current && canvasRef.current) {
       const fruitCounts = [4, 4, 4, 3];
       const count = fruitCounts[Math.floor(Math.random() * fruitCounts.length)];
       for (let i = 0; i < count; i++) {
@@ -528,7 +539,8 @@ const Game = ({ onGameOver, startGame }) => {
         } else {
           // For regular (non-golden) fruits, update score and show effects.
           scoreRef.current += fruit.points;
-          document.getElementById("score").textContent = `Score: ${scoreRef.current}`;
+          const scoreEl = document.getElementById("score");
+          if (scoreEl) scoreEl.textContent = `Score: ${scoreRef.current}`;
           for (let i = 0; i < 5; i++) {
             shineParticlesRef.current.push(
               new ShineParticle(fruit.x + fruit.size / 2, fruit.y + fruit.size / 2)
@@ -764,6 +776,12 @@ const Game = ({ onGameOver, startGame }) => {
         backgroundMusicRef.current.pause();
         backgroundMusicRef.current.currentTime = 0;
       }
+      clearInterval(gameLoopRef.current);
+      clearInterval(spawnIntervalRef.current);
+      clearInterval(timerIntervalRef.current);
+      clearInterval(goldenCoinIntervalRef.current);
+      clearInterval(bonusIntervalRef.current);
+      clearTimeout(bonusTimeoutRef.current);
     };
   }, []);
 
@@ -796,8 +814,10 @@ const Game = ({ onGameOver, startGame }) => {
     scoreRef.current = 0;
     timeRemainingRef.current = 45;
     gameOverRef.current = false;
-    document.getElementById("score").textContent = `Score: ${scoreRef.current}`;
-    document.getElementById("timer").textContent = `Time: ${timeRemainingRef.current}`;
+    const scoreEl = document.getElementById("score");
+    if (scoreEl) scoreEl.textContent = `Score: ${scoreRef.current}`;
+    const timerEl = document.getElementById("timer");
+    if (timerEl) timerEl.textContent = `Time: ${timeRemainingRef.current}`;
     clearInterval(gameLoopRef.current);
     clearInterval(spawnIntervalRef.current);
     clearInterval(timerIntervalRef.current);

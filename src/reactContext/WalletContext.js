@@ -52,7 +52,11 @@ export const WalletProvider = ({ children }) => {
           console.log("Initializing TonConnect with manifest:", manifestUrl);
 
           tonConnectUIRef.current = new TonConnectUI({
-            manifestUrl: manifestUrl
+            manifestUrl: manifestUrl,
+            walletsListConfiguration: {
+              includeWallets: [],
+              excludeWallets: ['okxTonWallet', 'okx-wallet', 'okx']
+            }
           });
 
           // Set up status change listener
