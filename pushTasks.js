@@ -127,8 +127,8 @@
 // console.log("\n✨ Done!");
 
 // pushTasks.js
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set } from "firebase/database";
+const { initializeApp } = require("firebase/app");
+const { getDatabase, ref, set, remove } = require("firebase/database");
 
 // 🔑 Your Firebase Config (from your project)
 const firebaseConfig = {
@@ -147,10 +147,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
+
 // 📋 Full task list (IDs 0 to 11)
 const allTasks = [
   {
-    id: 0,
+    id: 1,
     title: "Watch Introduction Video",
     description: "Introductory video to get started",
     completed: 0,
@@ -164,21 +165,7 @@ const allTasks = [
     url: "https://www.youtube.com/watch?v=E2JQrC6yO1U",
     videoUrl: "https://www.youtube.com/watch?v=E2JQrC6yO1U",
   },
-  {
-    id: 1,
-    title: "Watch Introduction Video",
-    description: "Introductory video to get started",
-    completed: 0,
-    type: "watch",
-    category: "daily",
-    total: 1,
-    points: 50,
-    score: 400,
-    iconBg: "bg-indigo-500/30",
-    updatedAt: "2026-01-02T00:00:00.000Z",
-    url: "https://t.me/+vv1QtTdqBlkYzlI",
-    videoUrl: "https://www.youtube.com/watch?v=E2JQrC6yO1U",
-  },
+
   {
     id: 2,
     title: "Refer a Friend",
@@ -319,16 +306,26 @@ const allTasks = [
 ];
 
 // 🔄 Push all tasks to Firebase
+// 🔄 Push all tasks to Firebase
 console.log("🚀 Pushing tasks to Firebase Realtime Database...\n");
 
-allTasks.forEach(async (task) => {
-  const taskRef = ref(database, `tasks/${task.id}`);
+const pushData = async () => {
   try {
-    await set(taskRef, task);
-    console.log(`✅ Task ${task.id} — "${task.title}" pushed successfully.`);
-  } catch (err) {
-    console.error(`❌ Failed to push task ${task.id}:`, err.message || err);
-  }
-});
+    // Remove duplicate task 0
+    await remove(ref(database, 'tasks/0'));
+    console.log("🗑️  Removed duplicate Task 0.");
 
-console.log("\n✨ Done!");
+    for (const task of allTasks) {
+      const taskRef = ref(database, `tasks/${task.id}`);
+      await set(taskRef, task);
+      console.log(`✅ Task ${task.id} — "${task.title}" pushed successfully.`);
+    }
+    console.log("\n✨ Done!");
+    process.exit(0);
+  } catch (err) {
+    console.error("❌ Error:", err);
+    process.exit(1);
+  }
+};
+
+pushData();

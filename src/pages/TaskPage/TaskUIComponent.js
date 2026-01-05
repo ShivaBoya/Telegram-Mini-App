@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from "react";
-import { ChevronLeft, Award, Zap, Users, Wallet, CheckSquare, BookOpen, PlayCircle, Send, Twitter } from "lucide-react";
+import { ChevronLeft, Award, Zap, Users, Wallet, CheckSquare, BookOpen, PlayCircle, Send, Twitter, X } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
@@ -21,6 +21,7 @@ export default function TasksPage() {
   const [clicked, setClick] = useState({ watch: {}, social: false });
   const [verify, setVerify] = useState("");
   const [buttonText, setButtonText] = useState({});
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const [membershipStatus, setMembershipStatus] = useState(null);
   const [userTasks, setUserTasks] = useState({});
   const [gameCompleted, setGameCompleted] = useState(false);
@@ -190,11 +191,17 @@ export default function TasksPage() {
 
     switch (task.type?.toLowerCase()) {
       case "watch":
-      case "watch":
         if (["Start Task", "Join Again"].includes(currentText) && userTasks[taskId] !== false) {
-          window.open(task.url, "_blank");
-          setClick(prev => ({ ...prev, watch: { ...prev.watch, [taskId]: true } }));
+          // Open Video Modal
+          const videoUrl = task.videoUrl || task.url;
+          if (videoUrl) {
+            setSelectedVideo(videoUrl);
+          }
+
+          // Allow claim after watching (simulated by opening)
+          update(userTasksRef, { [taskId]: false });
           updatedButtonTexts[taskId] = "Claim";
+          setButtonText(updatedButtonTexts);
         } else if (userTasks[taskId] === false || currentText === "Claim") {
           updatedButtonTexts[taskId] = "Processing...";
           setButtonText(updatedButtonTexts);
@@ -217,8 +224,6 @@ export default function TasksPage() {
             );
 
             await update(userTasksRef, { [taskId]: true });
-
-            // Update both task_score and total_score
             await update(userScoreRef, {
               task_score: newTaskScore,
               total_score: newTotalScore
@@ -631,23 +636,7 @@ export default function TasksPage() {
                                     <span className="text-white bg-green-500 p-1 ml-1 rounded text-[10px]">Verified ✅</span>
                                   )}
                                 </p>
-                                {clicked.watch[taskId] && (
-                                  <div className="flex mt-2" id={`verifyblock-${taskId}`}>
-                                    <input
-                                      type="text"
-                                      value={verify}
-                                      placeholder="Code"
-                                      onChange={(e) => setVerify(e.target.value)}
-                                      className="bg-gray-200 h-6 p-1 rounded text-black w-20 text-xs"
-                                    />
-                                    <button
-                                      className="ml-2 text-xs h-6 px-2 bg-violet-500 text-white rounded"
-                                      onClick={() => handleVerification(task, taskId)}
-                                    >
-                                      Verify
-                                    </button>
-                                  </div>
-                                )}
+
                               </div>
                             </div>
                             <div className="flex flex-col gap-1 items-end">
@@ -685,6 +674,40 @@ export default function TasksPage() {
           </Tabs>
         </main>
       </div>
-    </div >
+      {/* Video Modal Popup */}
+      {selectedVideo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-gray-900 border border-white/10 rounded-xl overflow-hidden w-full max-w-2xl shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <div className="flex justify-between items-center p-4 border-b border-white/10 bg-white/5">
+              <h3 className="text-white font-medium">Watch Video</h3>
+              <button
+                onClick={() => setSelectedVideo(null)}
+                className="text-white/70 hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="aspect-video w-full bg-black relative">
+              <iframe
+                src={selectedVideo.includes('youtube.com/watch?v=') ? selectedVideo.replace('watch?v=', 'embed/') : selectedVideo}
+                className="absolute inset-0 w-full h-full"
+                title="Task Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="p-4 flex justify-end bg-white/5">
+              <button
+                onClick={() => setSelectedVideo(null)}
+                className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
+                Close & Claim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
