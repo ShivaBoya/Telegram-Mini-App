@@ -1027,28 +1027,29 @@ export default function TasksPage() {
 
     switch (task.type?.toLowerCase()) {
       case "watch":
-        if (["Start Task", "Join Again"].includes(currentText)) {
+      case "watch":
+        if (["Start Task", "Join Again"].includes(currentText) && userTasks[taskId] !== false) {
           window.open(task.url, "_blank");
           setClick(prev => ({ ...prev, watch: { ...prev.watch, [taskId]: true } }));
           updatedButtonTexts[taskId] = "Claim";
-        } else if (currentText === "Claim") {
+        } else if (userTasks[taskId] === false || currentText === "Claim") {
           updatedButtonTexts[taskId] = "Processing...";
           setButtonText(updatedButtonTexts);
           try {
             const snapshot = await get(userScoreRef);
             const currentData = snapshot.val() || {};
 
-            // Calculate new task_score
-            const currentTaskScore = currentData.task_score || 0;
-            const newTaskScore = currentTaskScore + task.points;
+            // Calculate new task_score with strict Number parsing
+            const currentTaskScore = Number(currentData.task_score) || 0;
+            const taskPoints = Number(task.points) || 0;
+            const newTaskScore = currentTaskScore + taskPoints;
 
             // Calculate new total_score
-            // Ensure we use the NEW task_score in the total calculation
             const newTotalScore = (
-              (currentData.farming_score || 0) +
-              (currentData.game_score || 0) +
-              (currentData.network_score || 0) +
-              (currentData.news_score || 0) +
+              (Number(currentData.farming_score) || 0) +
+              (Number(currentData.game_score) || 0) +
+              (Number(currentData.network_score) || 0) +
+              (Number(currentData.news_score) || 0) +
               newTaskScore
             );
 
@@ -1062,7 +1063,7 @@ export default function TasksPage() {
 
             addHistoryLog(userId, {
               action: 'Task Points Successfully Added',
-              points: task.points,
+              points: taskPoints,
               type: 'task',
             });
             clickBtn.style.display = "none";
