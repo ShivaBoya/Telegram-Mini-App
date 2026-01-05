@@ -1423,7 +1423,7 @@ export default function TasksPage() {
                         <div className="mt-3">
                           <div className="flex justify-between text-xs text-white/70 mb-1">
                             <span>Progress</span>
-                            <span>{(task.type === "game" && gameCompleted ? 1 : task.completed)}/{task.total}</span>
+                            <span>{((task.type === "game" && gameCompleted) || userTasks[task.id] === true ? task.total : task.completed)}/{task.total}</span>
                           </div>
                           <Progress value={(task.type === "game" && gameCompleted ? 100 : (userTasks[task.id] === true ? 100 : (task.completed / task.total) * 100))} className="h-1.5 bg-white/10" />
                         </div>
@@ -1451,7 +1451,7 @@ export default function TasksPage() {
                         <div className="mt-3">
                           <div className="flex justify-between text-xs text-white/70 mb-1">
                             <span>Progress</span>
-                            <span>{task.completed}/{task.total}</span>
+                            <span>{((task.type === "game" && gameCompleted) || userTasks[task.id] === true ? task.total : task.completed)}/{task.total}</span>
                           </div>
                           <Progress value={(task.completed / task.total) * 100} className="h-1.5 bg-white/10" />
                         </div>
@@ -1479,7 +1479,7 @@ export default function TasksPage() {
                         <div className="mt-3">
                           <div className="flex justify-between text-xs text-white/70 mb-1">
                             <span>Progress</span>
-                            <span>{task.completed}/{task.total}</span>
+                            <span>{((task.type === "game" && gameCompleted) || userTasks[task.id] === true ? task.total : task.completed)}/{task.total}</span>
                           </div>
                           <Progress value={(task.completed / task.total) * 100} className="h-1.5 bg-white/10" />
                         </div>
