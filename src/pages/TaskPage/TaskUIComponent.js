@@ -1226,6 +1226,56 @@ export default function TasksPage() {
         }
         break;
 
+      case "news":
+        if (userTasks[taskId] !== false && ["Start Task", "Join Again"].includes(currentText)) {
+          navigate("/news");
+          // Check if news requirement is met
+          if (newsCount >= 5) {
+            update(userTasksRef, { [taskId]: false }); // Mark as claimable
+            updatedButtonTexts[taskId] = "Claim";
+          }
+          setButtonText(updatedButtonTexts);
+        } else if (userTasks[taskId] === false || currentText === "Claim") {
+          updatedButtonTexts[taskId] = "Processing...";
+          setButtonText(updatedButtonTexts);
+          try {
+            const snapshot = await get(userScoreRef);
+            const currentData = snapshot.val() || {};
+
+            // Calculate new task_score with strict Number parsing
+            const currentTaskScore = Number(currentData.task_score) || 0;
+            const taskPoints = Number(task.points) || 0;
+            const newTaskScore = currentTaskScore + taskPoints;
+
+            // Calculate new total_score
+            const newTotalScore = (
+              (Number(currentData.farming_score) || 0) +
+              (Number(currentData.game_score) || 0) +
+              (Number(currentData.network_score) || 0) +
+              (Number(currentData.news_score) || 0) +
+              newTaskScore
+            );
+
+            await update(userTasksRef, { [taskId]: true });
+            await update(userScoreRef, {
+              task_score: newTaskScore,
+              total_score: newTotalScore
+            });
+
+            addHistoryLog(userId, {
+              action: 'News Task Reward',
+              points: taskPoints,
+              type: 'news',
+            });
+            clickBtn.style.display = "none";
+          } catch (error) {
+            updatedButtonTexts[taskId] = "Failed";
+            setButtonText(updatedButtonTexts);
+            setTimeout(() => setButtonText(prev => ({ ...prev, [taskId]: "Try Again" })), 2000);
+          }
+        }
+        break;
+
       default:
         setClick({ watch: {}, social: false });
     }
