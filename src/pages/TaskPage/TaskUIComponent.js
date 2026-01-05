@@ -1129,36 +1129,23 @@ export default function TasksPage() {
         break;
 
       case "game":
-        if (["Start Task", "Play Again"].includes(currentText)) {
-          navigate("/game");
-          if (gameCompleted) {
-            update(userTasksRef, { [taskId]: false });
-            updatedButtonTexts[taskId] = "Claim";
-          } else {
-            updatedButtonTexts[taskId] = "Play Again";
-          }
-          setButtonText(updatedButtonTexts);
-        } else if (currentText === "Claim") {
+        if (userTasks[taskId] === false || currentText === "Claim") {
           updatedButtonTexts[taskId] = "Processing...";
           setButtonText(updatedButtonTexts);
           try {
             const snapshot = await get(userScoreRef);
             const currentData = snapshot.val() || {};
 
-            // Note: For game definition, if the reward is meant to go to 'game_score' 
-            // you might want to update game_score instead. 
-            // But if it's a TASK about the game, it might go to task_score.
-            // adherence to USER instructions: "taskuicomponent is ignoring the task_score"
-            // So we assume this is a general Task that contributes to task_score.
-
-            const currentTaskScore = currentData.task_score || 0;
-            const newTaskScore = currentTaskScore + task.points;
+            // Strict Number parsing to prevent string concatenation
+            const currentTaskScore = Number(currentData.task_score) || 0;
+            const taskPoints = Number(task.points) || 0;
+            const newTaskScore = currentTaskScore + taskPoints;
 
             const newTotalScore = (
-              (currentData.farming_score || 0) +
-              (currentData.game_score || 0) +
-              (currentData.network_score || 0) +
-              (currentData.news_score || 0) +
+              (Number(currentData.farming_score) || 0) +
+              (Number(currentData.game_score) || 0) +
+              (Number(currentData.network_score) || 0) +
+              (Number(currentData.news_score) || 0) +
               newTaskScore
             );
 
@@ -1170,7 +1157,7 @@ export default function TasksPage() {
 
             addHistoryLog(userId, {
               action: 'Game Task Reward',
-              points: task.points,
+              points: taskPoints,
               type: 'game',
             });
             clickBtn.style.display = "none";
@@ -1179,6 +1166,15 @@ export default function TasksPage() {
             setButtonText(updatedButtonTexts);
             setTimeout(() => setButtonText(prev => ({ ...prev, [taskId]: "Try Again" })), 2000);
           }
+        } else if (["Start Task", "Play Again"].includes(currentText)) {
+          navigate("/game");
+          if (gameCompleted) {
+            update(userTasksRef, { [taskId]: false });
+            updatedButtonTexts[taskId] = "Claim";
+          } else {
+            updatedButtonTexts[taskId] = "Play Again";
+          }
+          setButtonText(updatedButtonTexts);
         }
         break;
 
