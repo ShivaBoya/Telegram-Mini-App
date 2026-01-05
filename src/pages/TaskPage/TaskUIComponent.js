@@ -522,7 +522,7 @@ export default function TasksPage() {
                               <p className="text-xs text-white/70 mt-1">
                                 {task.description}
                                 {userTasks[task.id] === true && (
-                                  <span className="text-white bg-green-500 p-1 ml-1 rounded text-[10px]">Verifiedâœ…</span>
+                                  <span className="text-white bg-green-500 p-1 ml-1 rounded text-[10px]">Verified ✅</span>
                                 )}
                               </p>
                             </div>
@@ -628,7 +628,7 @@ export default function TasksPage() {
                                 <p className="text-xs text-white/70 mt-1">
                                   {task.description}
                                   {userTasks[taskId] === true && (
-                                    <span className="text-white bg-green-500 p-1 ml-1 rounded text-[10px]">Verifiedâœ…</span>
+                                    <span className="text-white bg-green-500 p-1 ml-1 rounded text-[10px]">Verified ✅</span>
                                   )}
                                 </p>
                                 {clicked.watch[taskId] && (
@@ -668,7 +668,7 @@ export default function TasksPage() {
                           <div className="mt-3">
                             <div className="flex justify-between text-xs text-white/70 mb-1">
                               <span>Progress</span>
-                              <span>{task.completed}/{task.total}</span>
+                              <span>{((task.type === "game" && gameCompleted) || userTasks[taskId] === true ? task.total : task.completed)}/{task.total}</span>
                             </div>
                             <Progress
                               value={userTasks[taskId] === true ? 100 : (task.completed / task.total) * 100}
