@@ -95,7 +95,9 @@ export default function TasksPage() {
 
     return {
       ...task,
+      type: (task.title && task.title.toLowerCase().includes('news')) ? 'news' : task.type,
       points: reward, // Normalize to `points` for consistency
+      completed: (task.title && task.title.toLowerCase().includes('news')) ? newsCount : (task.completed || 0),
       icon: iconKey ? IconMap[iconKey] : (IconMap['Zap'] || <Zap className="h-5 w-5 text-indigo-300" />),
       iconBg: task.iconBg || "bg-indigo-500/30",
     };
@@ -340,63 +342,13 @@ export default function TasksPage() {
         break;
 
       case "news":
-        if (currentText === "Start Task") {
-          navigate("/news");
-          if (newsCount >= 5) {
-            update(userTasksRef, { [taskId]: false });
-            updatedButtonTexts[taskId] = "Claim";
+        if (userTasks[taskId] === false || currentText === "Claim") {
+          // Double check requirement
+          if (newsCount < 5) {
+            navigate("/news");
+            return;
           }
-          setButtonText(updatedButtonTexts);
-        } else if (currentText === "Claim") {
-          updatedButtonTexts[taskId] = "Processing...";
-          setButtonText(updatedButtonTexts);
-          try {
-            const snapshot = await get(userScoreRef);
-            const currentData = snapshot.val() || {};
 
-            // Calculate new task_score
-            const currentTaskScore = currentData.task_score || 0;
-            const newTaskScore = currentTaskScore + task.points;
-
-            // Calculate new total_score
-            const newTotalScore = (
-              (currentData.farming_score || 0) +
-              (currentData.game_score || 0) +
-              (currentData.network_score || 0) +
-              (currentData.news_score || 0) +
-              newTaskScore
-            );
-
-            await update(userTasksRef, { [taskId]: true });
-            await update(userScoreRef, {
-              task_score: newTaskScore,
-              total_score: newTotalScore
-            });
-
-            addHistoryLog(userId, {
-              action: 'News Task Reward',
-              points: task.points,
-              type: 'news',
-            });
-            clickBtn.style.display = "none";
-          } catch (error) {
-            updatedButtonTexts[taskId] = "Failed";
-            setButtonText(updatedButtonTexts);
-            setTimeout(() => setButtonText(prev => ({ ...prev, [taskId]: "Try Again" })), 2000);
-          }
-        }
-        break;
-
-      case "news":
-        if (userTasks[taskId] !== false && ["Start Task", "Join Again"].includes(currentText)) {
-          navigate("/news");
-          // Check if news requirement is met
-          if (newsCount >= 5) {
-            update(userTasksRef, { [taskId]: false }); // Mark as claimable
-            updatedButtonTexts[taskId] = "Claim";
-          }
-          setButtonText(updatedButtonTexts);
-        } else if (userTasks[taskId] === false || currentText === "Claim") {
           updatedButtonTexts[taskId] = "Processing...";
           setButtonText(updatedButtonTexts);
           try {
@@ -433,6 +385,15 @@ export default function TasksPage() {
             updatedButtonTexts[taskId] = "Failed";
             setButtonText(updatedButtonTexts);
             setTimeout(() => setButtonText(prev => ({ ...prev, [taskId]: "Try Again" })), 2000);
+          }
+        } else {
+          // Default action: Navigate to news
+          navigate("/news");
+          // Check if news requirement is met to update status immediately (optional UX improvement)
+          if (newsCount >= 5) {
+            update(userTasksRef, { [taskId]: false }); // Mark as claimable
+            updatedButtonTexts[taskId] = "Claim";
+            setButtonText(updatedButtonTexts);
           }
         }
         break;
