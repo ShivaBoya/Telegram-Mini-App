@@ -920,9 +920,12 @@ export default function TasksPage() {
     Twitter: <Twitter className="h-5 w-5 text-sky-400" />,
   };
 
-  // ✅ Use `points` as primary reward — ignore `score`
+  // ✅ Use `points` as primary reward — fallback to `score`, then 100
   const mapTask = (task) => {
-    const reward = task.points ?? 100; // Always use `points`, fallback to 100
+    // Check points, then score, then default to 100
+    // Ensure it's treated as a number
+    const rawReward = task.points !== undefined ? task.points : (task.score !== undefined ? task.score : 100);
+    const reward = Number(rawReward) || 0;
 
     // Normalize icon key to handle case sensitivity (e.g., "users" -> "Users")
     const iconKey = typeof task.icon === 'string'
