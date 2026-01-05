@@ -22,6 +22,18 @@ export default function TasksPage() {
   const [verify, setVerify] = useState("");
   const [buttonText, setButtonText] = useState({});
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoTimer, setVideoTimer] = useState(0);
+  const [activeTaskId, setActiveTaskId] = useState(null);
+
+  useEffect(() => {
+    let interval;
+    if (selectedVideo && videoTimer > 0) {
+      interval = setInterval(() => {
+        setVideoTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [selectedVideo, videoTimer]);
   const [membershipStatus, setMembershipStatus] = useState(null);
   const [userTasks, setUserTasks] = useState({});
   const [gameCompleted, setGameCompleted] = useState(false);
@@ -192,16 +204,13 @@ export default function TasksPage() {
     switch (task.type?.toLowerCase()) {
       case "watch":
         if (["Start Task", "Join Again"].includes(currentText) && userTasks[taskId] !== false) {
-          // Open Video Modal
+          // Open Video Modal & Start Timer
           const videoUrl = task.videoUrl || task.url;
           if (videoUrl) {
             setSelectedVideo(videoUrl);
+            setVideoTimer(30); // Require 30 seconds watch time
+            setActiveTaskId(taskId);
           }
-
-          // Allow claim after watching (simulated by opening)
-          update(userTasksRef, { [taskId]: false });
-          updatedButtonTexts[taskId] = "Claim";
-          setButtonText(updatedButtonTexts);
         } else if (userTasks[taskId] === false || currentText === "Claim") {
           updatedButtonTexts[taskId] = "Processing...";
           setButtonText(updatedButtonTexts);
@@ -697,12 +706,25 @@ export default function TasksPage() {
                 allowFullScreen
               ></iframe>
             </div>
-            <div className="p-4 flex justify-end bg-white/5">
+            <div className="p-4 flex justify-between items-center bg-white/5">
+              <div className="text-white/70 text-sm">
+                {videoTimer > 0 ? `Reward available in ${videoTimer}s` : "Review complete!"}
+              </div>
               <button
-                onClick={() => setSelectedVideo(null)}
-                className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                disabled={videoTimer > 0}
+                onClick={async () => {
+                  if (activeTaskId) {
+                    await update(userTasksRef, { [activeTaskId]: false });
+                    setButtonText(prev => ({ ...prev, [activeTaskId]: "Claim" }));
+                  }
+                  setSelectedVideo(null);
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${videoTimer > 0
+                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700 text-white"
+                  }`}
               >
-                Close & Claim
+                {videoTimer > 0 ? `Wait ${videoTimer}s` : "Claim Reward"}
               </button>
             </div>
           </div>
