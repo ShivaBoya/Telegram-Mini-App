@@ -1034,11 +1034,29 @@ export default function TasksPage() {
           try {
             const snapshot = await get(userScoreRef);
             const currentData = snapshot.val() || {};
-            const currentPoints = currentData.points || 0;
-            const newPoints = currentPoints + task.points; // ✅ Uses `points` (e.g., 300)
+
+            // Calculate new task_score
+            const currentTaskScore = currentData.task_score || 0;
+            const newTaskScore = currentTaskScore + task.points;
+
+            // Calculate new total_score
+            // Ensure we use the NEW task_score in the total calculation
+            const newTotalScore = (
+              (currentData.farming_score || 0) +
+              (currentData.game_score || 0) +
+              (currentData.network_score || 0) +
+              (currentData.news_score || 0) +
+              newTaskScore
+            );
 
             await update(userTasksRef, { [taskId]: true });
-            await update(userScoreRef, { points: newPoints });
+
+            // Update both task_score and total_score
+            await update(userScoreRef, {
+              task_score: newTaskScore,
+              total_score: newTotalScore
+            });
+
             addHistoryLog(userId, {
               action: 'Task Points Successfully Added',
               points: task.points,
@@ -1067,11 +1085,28 @@ export default function TasksPage() {
           try {
             const snapshot = await get(userScoreRef);
             const currentData = snapshot.val() || {};
-            const currentPoints = currentData.points || 0;
-            const newPoints = currentPoints + task.points;
+
+            // Calculate new task_score
+            const currentTaskScore = currentData.task_score || 0;
+            const newTaskScore = currentTaskScore + task.points;
+
+            // Calculate new total_score
+            const newTotalScore = (
+              (currentData.farming_score || 0) +
+              (currentData.game_score || 0) +
+              (currentData.network_score || 0) +
+              (currentData.news_score || 0) +
+              newTaskScore
+            );
 
             await update(userTasksRef, { [taskId]: true });
-            await update(userScoreRef, { points: newPoints });
+
+            // Update both task_score and total_score
+            await update(userScoreRef, {
+              task_score: newTaskScore,
+              total_score: newTotalScore
+            });
+
             clickBtn.style.display = "none";
           } catch (error) {
             updatedButtonTexts[taskId] = "Failed";
@@ -1092,28 +1127,43 @@ export default function TasksPage() {
       case "game":
         if (["Start Task", "Play Again"].includes(currentText)) {
           navigate("/game");
-          // If game is completed, we can allow claiming. 
-          // Real-time listener updates `gameCompleted` state.
-          // We can check it here or rely on the user coming back.
           if (gameCompleted) {
-            update(userTasksRef, { [taskId]: false }); // Mark as claimable
+            update(userTasksRef, { [taskId]: false });
             updatedButtonTexts[taskId] = "Claim";
           } else {
             updatedButtonTexts[taskId] = "Play Again";
           }
           setButtonText(updatedButtonTexts);
         } else if (currentText === "Claim") {
-          // Claim logic
           updatedButtonTexts[taskId] = "Processing...";
           setButtonText(updatedButtonTexts);
           try {
             const snapshot = await get(userScoreRef);
             const currentData = snapshot.val() || {};
-            const currentPoints = currentData.points || 0;
-            const newPoints = currentPoints + task.points;
 
-            await update(userTasksRef, { [taskId]: true }); // Mark as claimed (true)
-            await update(userScoreRef, { points: newPoints });
+            // Note: For game definition, if the reward is meant to go to 'game_score' 
+            // you might want to update game_score instead. 
+            // But if it's a TASK about the game, it might go to task_score.
+            // adherence to USER instructions: "taskuicomponent is ignoring the task_score"
+            // So we assume this is a general Task that contributes to task_score.
+
+            const currentTaskScore = currentData.task_score || 0;
+            const newTaskScore = currentTaskScore + task.points;
+
+            const newTotalScore = (
+              (currentData.farming_score || 0) +
+              (currentData.game_score || 0) +
+              (currentData.network_score || 0) +
+              (currentData.news_score || 0) +
+              newTaskScore
+            );
+
+            await update(userTasksRef, { [taskId]: true });
+            await update(userScoreRef, {
+              task_score: newTaskScore,
+              total_score: newTotalScore
+            });
+
             addHistoryLog(userId, {
               action: 'Game Task Reward',
               points: task.points,
@@ -1131,24 +1181,37 @@ export default function TasksPage() {
       case "news":
         if (currentText === "Start Task") {
           navigate("/news");
-          // Check if news requirement is met
           if (newsCount >= 5) {
-            update(userTasksRef, { [taskId]: false }); // Mark as claimable
+            update(userTasksRef, { [taskId]: false });
             updatedButtonTexts[taskId] = "Claim";
           }
           setButtonText(updatedButtonTexts);
         } else if (currentText === "Claim") {
-          // Claim logic
           updatedButtonTexts[taskId] = "Processing...";
           setButtonText(updatedButtonTexts);
           try {
             const snapshot = await get(userScoreRef);
             const currentData = snapshot.val() || {};
-            const currentPoints = currentData.points || 0;
-            const newPoints = currentPoints + task.points;
+
+            // Calculate new task_score
+            const currentTaskScore = currentData.task_score || 0;
+            const newTaskScore = currentTaskScore + task.points;
+
+            // Calculate new total_score
+            const newTotalScore = (
+              (currentData.farming_score || 0) +
+              (currentData.game_score || 0) +
+              (currentData.network_score || 0) +
+              (currentData.news_score || 0) +
+              newTaskScore
+            );
 
             await update(userTasksRef, { [taskId]: true });
-            await update(userScoreRef, { points: newPoints });
+            await update(userScoreRef, {
+              task_score: newTaskScore,
+              total_score: newTotalScore
+            });
+
             addHistoryLog(userId, {
               action: 'News Task Reward',
               points: task.points,
@@ -1232,7 +1295,7 @@ export default function TasksPage() {
               <h1 className="text-xl font-bold text-white">Tasks</h1>
             </div>
             <div className="flex items-center gap-1">
-              <span className="font-medium text-sm text-white">{scores?.points || 0}</span>
+              <span className="font-medium text-sm text-white">{scores?.total_score || 0}</span>
               <Zap className="h-4 w-4 text-amber-300 fill-amber-300" />
             </div>
           </div>
@@ -1244,7 +1307,7 @@ export default function TasksPage() {
               <div>
                 <h3 className="text-sm font-medium text-white/80">Your Task Score</h3>
                 <p className="text-2xl font-bold text-white">
-                  {scores?.points || 0} <span className="text-amber-300">XP</span>
+                  {scores?.total_score || 0} <span className="text-amber-300">XP</span>
                 </p>
               </div>
               <div className="bg-white/10 rounded-full p-3">
