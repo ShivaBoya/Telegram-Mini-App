@@ -1415,7 +1415,7 @@ export default function TasksPage() {
                             >
                               {userTasks[task.id] === true
                                 ? (task.type === 'partnership' || task.type === 'social' ? "Open" : "Done")
-                                : (userTasks[task.id] === false ? "Claim" : buttonText[task.id] || "Start Task")
+                                : (userTasks[task.id] === false && (task.type !== 'news' || newsCount >= 5) ? "Claim" : buttonText[task.id] || "Start Task")
                               }
                             </button>
                           </div>
