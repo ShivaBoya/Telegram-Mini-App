@@ -267,7 +267,8 @@ export default function TasksPage() {
             await update(userTasksRef, { [taskId]: { lastClaimed: Date.now() } });
             await update(userScoreRef, {
               task_score: newTaskScore,
-              total_score: newTotalScore
+              total_score: newTotalScore,
+              task_updated_at: Date.now()
             });
 
             addHistoryLog(userId, {
@@ -317,7 +318,8 @@ export default function TasksPage() {
             // Update both task_score and total_score
             await update(userScoreRef, {
               task_score: newTaskScore,
-              total_score: newTotalScore
+              total_score: newTotalScore,
+              task_updated_at: Date.now()
             });
 
             clickBtn.style.display = "none";
@@ -361,7 +363,8 @@ export default function TasksPage() {
             await update(userTasksRef, { [taskId]: { lastClaimed: Date.now() } });
             await update(userScoreRef, {
               task_score: newTaskScore,
-              total_score: newTotalScore
+              total_score: newTotalScore,
+              task_updated_at: Date.now()
             });
 
             addHistoryLog(userId, {
@@ -418,7 +421,8 @@ export default function TasksPage() {
             await update(userTasksRef, { [taskId]: { lastClaimed: Date.now() } });
             await update(userScoreRef, {
               task_score: newTaskScore,
-              total_score: newTotalScore
+              total_score: newTotalScore,
+              task_updated_at: Date.now()
             });
 
             addHistoryLog(userId, {
