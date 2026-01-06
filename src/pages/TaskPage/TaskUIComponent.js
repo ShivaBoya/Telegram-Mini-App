@@ -43,6 +43,24 @@ export default function TasksPage() {
   const userScoreRef = ref(database, `users/${user.id}/Score`);
   const userId = user.id;
 
+  const isTaskDone = (taskId, category) => {
+    const status = userTasks[taskId];
+    if (status === undefined || status === null || status === false) return false;
+
+    // Legacy support
+    if (status === true) return true;
+
+    // Check 24h expiration for daily tasks
+    if (typeof status === 'object' && status.lastClaimed) {
+      if (category === 'daily') {
+        const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+        return (Date.now() - status.lastClaimed) < ONE_DAY_MS;
+      }
+      return true;
+    }
+    return false;
+  };
+
   useEffect(() => {
     const tasksRef = ref(database, "tasks");
     const gameTaskRef = ref(database, `connections/${user.id}/tasks/daily/game`);
@@ -232,7 +250,7 @@ export default function TasksPage() {
               newTaskScore
             );
 
-            await update(userTasksRef, { [taskId]: true });
+            await update(userTasksRef, { [taskId]: { lastClaimed: Date.now() } });
             await update(userScoreRef, {
               task_score: newTaskScore,
               total_score: newTotalScore
@@ -280,7 +298,7 @@ export default function TasksPage() {
               newTaskScore
             );
 
-            await update(userTasksRef, { [taskId]: true });
+            await update(userTasksRef, { [taskId]: { lastClaimed: Date.now() } });
 
             // Update both task_score and total_score
             await update(userScoreRef, {
@@ -326,7 +344,7 @@ export default function TasksPage() {
               newTaskScore
             );
 
-            await update(userTasksRef, { [taskId]: true });
+            await update(userTasksRef, { [taskId]: { lastClaimed: Date.now() } });
             await update(userScoreRef, {
               task_score: newTaskScore,
               total_score: newTotalScore
@@ -383,7 +401,7 @@ export default function TasksPage() {
               newTaskScore
             );
 
-            await update(userTasksRef, { [taskId]: true });
+            await update(userTasksRef, { [taskId]: { lastClaimed: Date.now() } });
             await update(userScoreRef, {
               task_score: newTaskScore,
               total_score: newTotalScore
@@ -535,7 +553,7 @@ export default function TasksPage() {
                             <div className="flex flex-col">
                               <p className="text-xs text-white/70 mt-1">
                                 {task.description}
-                                {userTasks[task.id] === true && (
+                                {isTaskDone(task.id, task.category) && (
                                   <span className="text-white bg-green-500 p-1 ml-1 rounded text-[10px]">Verified ✅</span>
                                 )}
                               </p>
@@ -544,12 +562,12 @@ export default function TasksPage() {
                           <div className="flex flex-col gap-1 items-end">
                             <Badge className="bg-amber-500/90 whitespace-nowrap">+{task.points} XP</Badge>
                             <button
-                              className={`rounded text-white text-sm px-2 py-1 mt-1 whitespace-nowrap ${userTasks[task.id] === true && task.type !== 'partnership' && task.type !== 'social' ? 'bg-gray-500 cursor-not-allowed' : 'bg-violet-500 hover:bg-violet-700'}`}
+                              className={`rounded text-white text-sm px-2 py-1 mt-1 whitespace-nowrap ${isTaskDone(task.id, task.category) && task.type !== 'partnership' && task.type !== 'social' ? 'bg-gray-500 cursor-not-allowed' : 'bg-violet-500 hover:bg-violet-700'}`}
                               id={`clickBtn${task.id}`}
-                              disabled={userTasks[task.id] === true && task.type !== 'partnership' && task.type !== 'social'}
+                              disabled={isTaskDone(task.id, task.category) && task.type !== 'partnership' && task.type !== 'social'}
                               onClick={() => handleTitle(task, task.id)}
                             >
-                              {userTasks[task.id] === true
+                              {isTaskDone(task.id, task.category)
                                 ? (task.type === 'partnership' || task.type === 'social' ? "Open" : "Done")
                                 : (userTasks[task.id] === false && (task.type !== 'news' || newsCount >= 5) ? "Claim" : buttonText[task.id] || "Start Task")
                               }
@@ -559,9 +577,9 @@ export default function TasksPage() {
                         <div className="mt-3">
                           <div className="flex justify-between text-xs text-white/70 mb-1">
                             <span>Progress</span>
-                            <span>{((task.type === "game" && gameCompleted) || userTasks[task.id] === true ? task.total : task.completed)}/{task.total}</span>
+                            <span>{((task.type === "game" && gameCompleted) || isTaskDone(task.id, task.category) ? task.total : task.completed)}/{task.total}</span>
                           </div>
-                          <Progress value={(task.type === "game" && gameCompleted ? 100 : (userTasks[task.id] === true ? 100 : (task.completed / task.total) * 100))} className="h-1.5 bg-white/10" />
+                          <Progress value={(task.type === "game" && gameCompleted ? 100 : (isTaskDone(task.id, task.category) ? 100 : (task.completed / task.total) * 100))} className="h-1.5 bg-white/10" />
                         </div>
                       </div>
                     </div>
@@ -587,7 +605,7 @@ export default function TasksPage() {
                         <div className="mt-3">
                           <div className="flex justify-between text-xs text-white/70 mb-1">
                             <span>Progress</span>
-                            <span>{((task.type === "game" && gameCompleted) || userTasks[task.id] === true ? task.total : task.completed)}/{task.total}</span>
+                            <span>{((task.type === "game" && gameCompleted) || isTaskDone(task.id, task.category) ? task.total : task.completed)}/{task.total}</span>
                           </div>
                           <Progress value={(task.completed / task.total) * 100} className="h-1.5 bg-white/10" />
                         </div>
@@ -615,7 +633,7 @@ export default function TasksPage() {
                         <div className="mt-3">
                           <div className="flex justify-between text-xs text-white/70 mb-1">
                             <span>Progress</span>
-                            <span>{((task.type === "game" && gameCompleted) || userTasks[task.id] === true ? task.total : task.completed)}/{task.total}</span>
+                            <span>{((task.type === "game" && gameCompleted) || isTaskDone(task.id, task.category) ? task.total : task.completed)}/{task.total}</span>
                           </div>
                           <Progress value={(task.completed / task.total) * 100} className="h-1.5 bg-white/10" />
                         </div>
@@ -641,7 +659,7 @@ export default function TasksPage() {
                               <div className="flex flex-col">
                                 <p className="text-xs text-white/70 mt-1">
                                   {task.description}
-                                  {userTasks[taskId] === true && (
+                                  {isTaskDone(taskId, task.category) && (
                                     <span className="text-white bg-green-500 p-1 ml-1 rounded text-[10px]">Verified ✅</span>
                                   )}
                                 </p>
@@ -651,12 +669,12 @@ export default function TasksPage() {
                             <div className="flex flex-col gap-1 items-end">
                               <Badge className="bg-amber-500/90 whitespace-nowrap">+{task.points} XP</Badge>
                               <button
-                                className={`rounded text-white text-sm px-2 py-1 mt-1 whitespace-nowrap ${userTasks[taskId] === true && task.type !== 'partnership' && task.type !== 'social' ? 'bg-gray-500 cursor-not-allowed' : 'bg-violet-500 hover:bg-violet-700'}`}
+                                className={`rounded text-white text-sm px-2 py-1 mt-1 whitespace-nowrap ${isTaskDone(taskId, task.category) && task.type !== 'partnership' && task.type !== 'social' ? 'bg-gray-500 cursor-not-allowed' : 'bg-violet-500 hover:bg-violet-700'}`}
                                 id={`clickBtn${taskId}`}
-                                disabled={userTasks[taskId] === true && task.type !== 'partnership' && task.type !== 'social'}
+                                disabled={isTaskDone(taskId, task.category) && task.type !== 'partnership' && task.type !== 'social'}
                                 onClick={() => handleTitle(task, taskId)}
                               >
-                                {userTasks[taskId] === true
+                                {isTaskDone(taskId, task.category)
                                   ? (task.type === 'partnership' || task.type === 'social' ? "Open" : "Done")
                                   : (userTasks[taskId] === false ? "Claim" : buttonText[taskId] || "Start Task")
                                 }
@@ -666,10 +684,10 @@ export default function TasksPage() {
                           <div className="mt-3">
                             <div className="flex justify-between text-xs text-white/70 mb-1">
                               <span>Progress</span>
-                              <span>{((task.type === "game" && gameCompleted) || userTasks[taskId] === true ? task.total : task.completed)}/{task.total}</span>
+                              <span>{((task.type === "game" && gameCompleted) || isTaskDone(taskId, task.category) ? task.total : task.completed)}/{task.total}</span>
                             </div>
                             <Progress
-                              value={userTasks[taskId] === true ? 100 : (task.completed / task.total) * 100}
+                              value={isTaskDone(taskId, task.category) ? 100 : (task.completed / task.total) * 100}
                               className="h-1.5 bg-white/10"
                             />
                           </div>
@@ -720,8 +738,8 @@ export default function TasksPage() {
                   setSelectedVideo(null);
                 }}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${videoTimer > 0
-                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                    : "bg-green-600 hover:bg-green-700 text-white"
+                  ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-700 text-white"
                   }`}
               >
                 {videoTimer > 0 ? `Wait ${videoTimer}s` : "Claim Reward"}
