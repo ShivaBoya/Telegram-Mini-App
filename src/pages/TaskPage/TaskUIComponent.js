@@ -499,7 +499,7 @@ export default function TasksPage() {
               <h1 className="text-xl font-bold text-white">Tasks</h1>
             </div>
             <div className="flex items-center gap-1">
-              <span className="font-medium text-sm text-white">{scores?.task_score || 0}</span>
+              <span className="font-medium text-sm text-white">{displayTaskScore}</span>
               <Zap className="h-4 w-4 text-amber-300 fill-amber-300" />
             </div>
           </div>
@@ -511,7 +511,7 @@ export default function TasksPage() {
               <div>
                 <h3 className="text-sm font-medium text-white/80">Your Task Score</h3>
                 <p className="text-2xl font-bold text-white">
-                  {scores?.task_score || 0} <span className="text-amber-300">XP</span>
+                  {displayTaskScore} <span className="text-amber-300">XP</span>
                 </p>
               </div>
               <div className="bg-white/10 rounded-full p-3">
