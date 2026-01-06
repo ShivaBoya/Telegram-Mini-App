@@ -56,14 +56,19 @@ export default function TasksPage() {
     const { id, type } = task;
     const status = userTasks[id];
     if (status === undefined || status === null || status === false) return false;
-    if (status === true) return true;
 
     const RESET_TYPES = ['game', 'news', 'partnership'];
     if (RESET_TYPES.includes(type)) {
+      // Legacy 'true' means old data -> Expired/Reset
+      if (status === true) return false;
+
       if (typeof status === 'object' && status.lastClaimed) {
         return isToday(status.lastClaimed);
       }
+      return false;
     }
+
+    // Default: Permanent completion for other tasks
     return true;
   };
 
