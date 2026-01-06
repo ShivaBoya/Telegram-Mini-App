@@ -38,6 +38,7 @@ export default function TasksPage() {
   const [userTasks, setUserTasks] = useState({});
   const [gameCompleted, setGameCompleted] = useState(false);
   const [newsCount, setnewsCount] = useState(0);
+  const [localScores, setLocalScores] = useState(null);
 
   const userTasksRef = ref(database, `connections/${user.id}`);
   const userScoreRef = ref(database, `users/${user.id}/Score`);
@@ -118,15 +119,24 @@ export default function TasksPage() {
       setUserTasks(snapshot.exists() ? snapshot.val() : {});
     });
 
+    const unsubscribeScores = onValue(userScoreRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setLocalScores(snapshot.val());
+      }
+    });
+
     return () => {
       unsubscribeTasks();
       unsubscribeGame();
       unsubscribeNews();
       unsubscribeUserTasks();
+      unsubscribeScores();
     };
   }, [user.id]);
 
-  const displayTaskScore = isToday(scores?.task_updated_at) ? (scores?.task_score || 0) : 0;
+  // Use localScores for real-time updates, fallback to context
+  const scoreData = localScores || scores;
+  const displayTaskScore = isToday(scoreData?.task_updated_at) ? (scoreData?.task_score || 0) : 0;
 
   const IconMap = {
     Zap: <Zap className="h-5 w-5 text-indigo-300" />,
@@ -140,8 +150,8 @@ export default function TasksPage() {
     Twitter: <Twitter className="h-5 w-5 text-sky-400" />,
   };
 
-  // âœ… Use `points` as primary reward â€” fallback to `score`, then 100
-  const weeklyPoints = isSameWeek(scores?.weekly_updated_at) ? (scores?.weekly_points || 0) : 0;
+  // Use `points` as primary reward â€” fallback to `score`, then 100
+  const weeklyPoints = isSameWeek(scoreData?.weekly_updated_at) ? (scoreData?.weekly_points || 0) : 0;
 
   const mapTask = (task) => {
     // Check points, then score, then default to 100
