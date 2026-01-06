@@ -43,22 +43,28 @@ export default function TasksPage() {
   const userScoreRef = ref(database, `users/${user.id}/Score`);
   const userId = user.id;
 
-  const isTaskDone = (taskId, category) => {
-    const status = userTasks[taskId];
-    if (status === undefined || status === null || status === false) return false;
+  const isToday = (timestamp) => {
+    if (!timestamp) return false;
+    const date = new Date(timestamp);
+    const today = new Date();
+    return date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear();
+  };
 
-    // Legacy support
+  const isTaskDone = (task) => {
+    const { id, type } = task;
+    const status = userTasks[id];
+    if (status === undefined || status === null || status === false) return false;
     if (status === true) return true;
 
-    // Check 24h expiration for daily tasks
-    if (typeof status === 'object' && status.lastClaimed) {
-      if (category === 'daily') {
-        const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-        return (Date.now() - status.lastClaimed) < ONE_DAY_MS;
+    const RESET_TYPES = ['game', 'news', 'partnership'];
+    if (RESET_TYPES.includes(type)) {
+      if (typeof status === 'object' && status.lastClaimed) {
+        return isToday(status.lastClaimed);
       }
-      return true;
     }
-    return false;
+    return true;
   };
 
   useEffect(() => {
@@ -67,6 +73,7 @@ export default function TasksPage() {
     const newsRef = ref(database, `connections/${user.id}/tasks/daily/news`);
 
     const unsubscribeTasks = onValue(tasksRef, (snapshot) => {
+      // Logic from lines 52-62
       if (snapshot.exists()) {
         const data = snapshot.val();
         console.log("Fetched Tasks from Firebase:", data);
@@ -99,6 +106,8 @@ export default function TasksPage() {
       unsubscribeUserTasks();
     };
   }, [user.id]);
+
+  const displayTaskScore = isToday(scores?.task_updated_at) ? (scores?.task_score || 0) : 0;
 
   const IconMap = {
     Zap: <Zap className="h-5 w-5 text-indigo-300" />,
