@@ -52,6 +52,20 @@ export default function TasksPage() {
       date.getFullYear() === today.getFullYear();
   };
 
+  const isSameWeek = (timestamp) => {
+    if (!timestamp) return false;
+    const date = new Date(timestamp);
+    const today = new Date();
+    date.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    // Same week check (reset on Monday)
+    const day = today.getDay();
+    const diffToMonday = day === 0 ? 6 : day - 1; // Days since last Monday
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - diffToMonday);
+    return date >= startOfWeek;
+  };
+
   const isTaskDone = (task) => {
     const { id, type } = task;
     const status = userTasks[id];
@@ -127,6 +141,8 @@ export default function TasksPage() {
   };
 
   // âœ… Use `points` as primary reward â€” fallback to `score`, then 100
+  const weeklyPoints = isSameWeek(scores?.weekly_updated_at) ? (scores?.weekly_points || 0) : 0;
+
   const mapTask = (task) => {
     // Check points, then score, then default to 100
     // Ensure it's treated as a number
@@ -138,11 +154,19 @@ export default function TasksPage() {
       ? Object.keys(IconMap).find(k => k.toLowerCase() === task.icon.toLowerCase())
       : null;
 
+    let completedVal = task.completed || 0;
+    // Map specific dynamic progress
+    if (task.title && task.title.toLowerCase().includes('news')) {
+      completedVal = newsCount;
+    } else if (task.id == 7 || (task.title && task.title.toLowerCase().includes('500 points'))) {
+      completedVal = weeklyPoints;
+    }
+
     return {
       ...task,
       type: (task.title && task.title.toLowerCase().includes('news')) ? 'news' : task.type,
       points: reward, // Normalize to `points` for consistency
-      completed: (task.title && task.title.toLowerCase().includes('news')) ? newsCount : (task.completed || 0),
+      completed: completedVal,
       icon: iconKey ? IconMap[iconKey] : (IconMap['Zap'] || <Zap className="h-5 w-5 text-indigo-300" />),
       iconBg: task.iconBg || "bg-indigo-500/30",
     };
