@@ -649,7 +649,7 @@ export default function TasksPage() {
                             <span>Progress</span>
                             <span>{((task.type === "game" && gameCompleted) || isTaskDone(task) ? task.total : task.completed)}/{task.total}</span>
                           </div>
-                          <Progress value={(task.completed / task.total) * 100} className="h-1.5 bg-white/10" />
+                          <Progress value={(isTaskDone(task) ? 100 : (task.completed / task.total) * 100)} className="h-1.5 bg-white/10" />
                         </div>
                       </div>
                     </div>
@@ -726,10 +726,10 @@ export default function TasksPage() {
                           <div className="mt-3">
                             <div className="flex justify-between text-xs text-white/70 mb-1">
                               <span>Progress</span>
-                              <span>{((task.type === "game" && gameCompleted) || isTaskDone(taskId, task.category) ? task.total : task.completed)}/{task.total}</span>
+                              <span>{((task.type === "game" && gameCompleted) || isTaskDone(task) ? task.total : task.completed)}/{task.total}</span>
                             </div>
                             <Progress
-                              value={isTaskDone(taskId, task.category) ? 100 : (task.completed / task.total) * 100}
+                              value={isTaskDone(task) ? 100 : (task.completed / task.total) * 100}
                               className="h-1.5 bg-white/10"
                             />
                           </div>
