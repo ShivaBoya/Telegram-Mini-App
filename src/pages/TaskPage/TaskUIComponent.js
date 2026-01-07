@@ -135,7 +135,7 @@ export default function TasksPage() {
     };
   }, [user.id]);
 
-  // Use localScores for real-time updates, fallback to context
+  //Use localScores for real-time updates, fallback to context
   const scoreData = localScores || scores;
   const displayTaskScore = isToday(scoreData?.task_updated_at) ? (scoreData?.task_score || 0) : 0;
 
