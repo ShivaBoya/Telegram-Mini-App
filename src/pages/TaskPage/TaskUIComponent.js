@@ -74,6 +74,7 @@ export default function TasksPage() {
 
     const RESET_TYPES = ['game', 'news', 'partnership'];
     if (RESET_TYPES.includes(type)) {
+      if (task.category === 'achievements') return true;
       // Legacy 'true' means old data -> Expired/Reset
       if (status === true) return false;
 
@@ -621,7 +622,7 @@ export default function TasksPage() {
                             >
                               {isTaskDone(task)
                                 ? (task.type === 'partnership' || task.type === 'social' ? "Open" : "Done")
-                                : (userTasks[task.id] === false && (task.type !== 'news' || newsCount >= 5) ? "Claim" : buttonText[task.id] || "Start Task")
+                                : (userTasks[task.id] === false && (task.type !== 'news' || newsCount >= task.total) ? "Claim" : buttonText[task.id] || "Start Task")
                               }
                             </button>
                           </div>
