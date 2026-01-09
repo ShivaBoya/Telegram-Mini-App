@@ -51,10 +51,14 @@ export default function HomeComponent() {
     const unsubscribeTasks = onValue(tasksRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        const tasksArray = Object.entries(data).map(([key, task]) => ({
-          ...task,
-          id: task.id || key,
-        }));
+        const tasksArray = [];
+        Object.values(data).forEach(item => {
+          if (item.title) {
+            tasksArray.push(item);
+          } else {
+            Object.values(item).forEach(task => tasksArray.push(task));
+          }
+        });
         setTasks(tasksArray);
       } else {
         setTasks([]);

@@ -94,14 +94,22 @@ export default function TasksPage() {
     const newsRef = ref(database, `connections/${user.id}/tasks/daily/news`);
 
     const unsubscribeTasks = onValue(tasksRef, (snapshot) => {
-      // Logic from lines 52-62
       if (snapshot.exists()) {
         const data = snapshot.val();
         console.log("Fetched Tasks from Firebase:", data);
-        const tasksArray = Object.entries(data).map(([key, task]) => ({
-          ...task,
-          id: task.id || key,
-        }));
+
+        // Flatten nested structure (categories -> tasks)
+        const tasksArray = [];
+        Object.values(data).forEach(item => {
+          if (item.title) {
+            // Direct task
+            tasksArray.push(item);
+          } else {
+            // Category object
+            Object.values(item).forEach(task => tasksArray.push(task));
+          }
+        });
+
         setTasks(tasksArray);
       } else {
         setTasks([]);
