@@ -197,6 +197,8 @@ export default function TasksPage() {
   const dailyTasks = processedTasks.filter(
     (task) => {
       if (task.type === 'watch' && isTaskDone(task)) return false;
+      // Exclude social tasks from daily
+      if (task.type === 'social') return false;
       return task.category === 'daily' || task.category === 'standard' || (!task.category && !['weekly', 'achievements'].includes(task.type));
     }
   );
