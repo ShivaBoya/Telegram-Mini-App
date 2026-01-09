@@ -194,7 +194,10 @@ export default function TasksPage() {
   const processedTasks = tasks.map(mapTask);
 
   const dailyTasks = processedTasks.filter(
-    (task) => task.category === 'daily' || task.category === 'standard' || (!task.category && !['weekly', 'achievements'].includes(task.type))
+    (task) => {
+      if (task.type === 'watch' && isTaskDone(task)) return false;
+      return task.category === 'daily' || task.category === 'standard' || (!task.category && !['weekly', 'achievements'].includes(task.type));
+    }
   );
   const weeklyTasks = processedTasks.filter(task => task.category === 'weekly');
   const achievements = processedTasks.filter(task => task.category === 'achievements');
