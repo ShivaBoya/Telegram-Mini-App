@@ -18,8 +18,6 @@ export default function TasksPage() {
   const [tasks, setTasks] = useState([]);
   const [filterType, setFilterType] = useState("all");
   const navigate = useNavigate();
-  const [clicked, setClick] = useState({ watch: {}, social: false });
-  const [verify, setVerify] = useState("");
   const [buttonText, setButtonText] = useState({});
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videoTimer, setVideoTimer] = useState(0);
@@ -34,7 +32,7 @@ export default function TasksPage() {
     }
     return () => clearInterval(interval);
   }, [selectedVideo, videoTimer]);
-  const [membershipStatus, setMembershipStatus] = useState(null);
+
   const [userTasks, setUserTasks] = useState({});
   const [gameCompleted, setGameCompleted] = useState(false);
   const [newsCount, setnewsCount] = useState(0);
@@ -340,7 +338,6 @@ export default function TasksPage() {
         break;
 
       case "social":
-        setClick(prev => ({ ...prev, [task.title]: true }));
         if (["Start Task", "Join Again", "Failed"].includes(currentText)) {
           updatedButtonTexts[taskId] = "Checking...";
           setButtonText(updatedButtonTexts);
@@ -528,18 +525,7 @@ export default function TasksPage() {
         break;
 
       default:
-        setClick({ watch: {}, social: false });
-    }
-  };
-
-  const handleVerification = (task, taskId) => {
-    const verifycode = `1234${taskId}`;
-    const verifyBlock = document.getElementById(`verifyblock-${taskId}`);
-    const clickBtn = document.getElementById(`clickBtn${taskId}`);
-    if (verifycode === verify + `${taskId}` && verify !== "") {
-      verifyBlock.style.display = "none";
-      clickBtn.style.display = "block";
-      update(userTasksRef, { [taskId]: false });
+        break;
     }
   };
 
@@ -547,13 +533,7 @@ export default function TasksPage() {
     ? processedTasks
     : processedTasks.filter(task => task.type === filterType);
 
-  const handleRoute = (path) => {
-    if (path === "referral") {
-      navigate(`/network`);
-    } else {
-      navigate(`/${path}`);
-    }
-  };
+
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-gradient-to-br from-indigo-600/90 via-purple-600/80 to-pink-600/90">
