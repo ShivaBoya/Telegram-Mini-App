@@ -16,11 +16,11 @@ const History = () => {
   /* state & context                                                */
   /* -------------------------------------------------------------- */
   const [totalScore, setTotalScore] = useState(0);
-  const [loading, setLoading]       = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const navigate     = useNavigate();
-  const { user }     = useTelegram();
-  const { history }  = useHistory();               // can be object or array
+  const navigate = useNavigate();
+  const { user } = useTelegram();
+  const { history } = useHistory();               // can be object or array
 
   /* -------------------------------------------------------------- */
   /* 1. convert ANY history shape → array → newest first            */
@@ -200,7 +200,7 @@ const History = () => {
                           <IconWrapper color="sky">
                             <TaskIcon />
                           </IconWrapper>
-                        )}                        
+                        )}
 
 
                         <div>
@@ -215,11 +215,10 @@ const History = () => {
 
                       {/* points */}
                       <div
-                        className={`text-base font-bold ${
-                          activity.points >= 0
+                        className={`text-base font-bold ${activity.points >= 0
                             ? "text-green-400"
                             : "text-red-400"
-                        }`}
+                          }`}
                       >
                         {activity.points >= 0 ? "+" : ""}
                         {activity.points} XP
@@ -293,11 +292,5 @@ const FarmingIcon = () => (
 const TaskIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-violet-400" viewBox="0 0 20 20" fill="currentColor">
     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clipRule="evenodd" />
-  </svg>
-);
-
-const WalletIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-sky-400" viewBox="0 0 20 20" fill="currentColor">
-    <path d="M4 4a2 2 0 012-2h10a2 2 0 012 2v2H4V4zm0 4h14v8a2 2 0 01-2 2H6a2 2 0 01-2-2V8zm10 4a1 1 0 100-2 1 1 0 000 2z" />
   </svg>
 );
