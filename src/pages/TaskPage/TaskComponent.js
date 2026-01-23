@@ -22,7 +22,7 @@ function TaskComponent() {
       try {
         const tasksRef = ref(database, "tasks");
         const connectionsRef = ref(database, `connections/${userId}`);
-        
+
         const tasksSnapshot = await get(tasksRef);
         const connectionsSnapshot = await get(connectionsRef);
 
@@ -41,7 +41,7 @@ function TaskComponent() {
 
     fetchTasks();
     fetchUserScore();
-  }, []);
+  }, [userId]);
 
   const changeTab = (newTab) => setCurrentTab(newTab);
 
@@ -53,8 +53,8 @@ function TaskComponent() {
         </header>
         <Tabs currentTab={currentTab} changeTab={changeTab} />
         <TasksList tasks={tasks} completedTasks={completedTasks} currentTab={currentTab} />
-        
-      </div>    
+
+      </div>
       <Footer />
     </>
 
