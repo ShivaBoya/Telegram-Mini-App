@@ -42,6 +42,40 @@ export const WalletProvider = ({ children }) => {
   // Ref to store TonConnectUI instance
   const tonConnectUIRef = useRef(null);
 
+  // Clear wallet data
+  const clearWalletData = React.useCallback(() => {
+    setWalletAddress('');
+    setIsConnected(false);
+    setTonBalance(null);
+    setUsdEquivalent(null);
+    setTransactions([]);
+    localStorage.removeItem('wallet_connected');
+    localStorage.removeItem('wallet_address');
+    localStorage.removeItem('ton_balance');
+    localStorage.removeItem('usd_equivalent');
+    localStorage.removeItem('wallet_transactions');
+  }, []);
+
+  // Update wallet data
+  const updateWalletData = React.useCallback(async (address) => {
+    setIsLoading(true);
+    try {
+      const balance = await fetchWalletBalance(address);
+      if (balance !== null) {
+        setTonBalance(balance);
+        const rate = await fetchExchangeRate();
+        setUsdEquivalent((balance * rate).toFixed(2));
+      }
+
+      const txs = await fetchTransactions(address);
+      setTransactions(txs);
+    } catch (error) {
+      console.error("Error updating wallet data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   // Initialize TonConnect
   useEffect(() => {
     const initializeTonConnect = async () => {
@@ -97,7 +131,7 @@ export const WalletProvider = ({ children }) => {
     };
 
     initializeTonConnect();
-  }, []);
+  }, [isConnected, updateWalletData, walletAddress, clearWalletData]);
 
   // Save state to localStorage
   useEffect(() => {
@@ -207,51 +241,7 @@ export const WalletProvider = ({ children }) => {
     }
   }
 
-  // Update wallet data
-  const updateWalletData = async (address) => {
-    if (!address) return;
 
-    try {
-      setIsLoading(true);
-
-      // Fetch balance
-      const balance = await fetchWalletBalance(address);
-      if (balance !== null) {
-        setTonBalance(balance.toFixed(4));
-
-        // Fetch exchange rate and calculate USD equivalent
-        const exchangeRate = await fetchExchangeRate();
-        setUsdEquivalent((balance * exchangeRate).toFixed(2));
-      } else {
-        setTonBalance('Error');
-        setUsdEquivalent('0.00');
-      }
-
-      // Fetch transactions
-      const txs = await fetchTransactions(address);
-      setTransactions(txs);
-    } catch (error) {
-      console.error("Error updating wallet data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Clear wallet data
-  const clearWalletData = () => {
-    setIsConnected(false);
-    setWalletAddress('');
-    setTonBalance(null);
-    setUsdEquivalent(null);
-    setTransactions([]);
-
-    // Clear localStorage
-    localStorage.removeItem('wallet_address');
-    localStorage.removeItem('wallet_connected');
-    localStorage.removeItem('ton_balance');
-    localStorage.removeItem('usd_equivalent');
-    localStorage.removeItem('wallet_transactions');
-  };
 
   // Connect wallet
   const connectWallet = async (userId) => {

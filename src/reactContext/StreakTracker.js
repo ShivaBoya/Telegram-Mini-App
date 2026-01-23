@@ -260,7 +260,7 @@ const StreakTracker = ({ children }) => {
 
     // This function runs the core streak logic
     // It should be called when a "streak-qualifying" action occurs (e.g., app load)
-    const updateStreak = async () => {
+    const updateStreak = React.useCallback(async () => {
         if (!user || !user.id) { // Check if user object and ID are available
             console.warn("No user ID available for streak update.");
             setLoadingStreak(false);
@@ -278,25 +278,6 @@ const StreakTracker = ({ children }) => {
             // If user data doesn't exist, initialize it with default streak values
             if (!userData) {
                 console.log("No user data found. Initializing new user and streak.");
-                // const initialUserData = {
-                //     name: user.first_name || "New User", // Using Telegram user info for name
-                //     lastPlayed: Date.now(),
-                //     lastUpdated: Date.now(),
-                //     lastReset: { daily: getUTCDateString() }, // Initial daily reset for consistency
-                //     Score: { /* ... default score values ... */ },
-                //     streak: {
-                //         currentStreakCount: 1,
-                //         lastStreakCheckDateUTC: getUTCDateString(),
-                //         longestStreakCount: 1
-                //     },
-                // };
-                // await update(userRef, initialUserData); // Use update to merge, not set to avoid overwriting existing data
-                // setCurrentStreak(1);
-                // setLongestStreak(1);
-                // setPopupMessage("🎉 Welcome! Your streak has started: 1 day!");
-                // setPopupCurrentStreak(1);
-                // setShowStreakPopup(true);
-                // setLoadingStreak(false);
                 setLoadingStreak(false)
                 return; // Exit as we've initialized and set the first streak
             }
@@ -311,14 +292,14 @@ const StreakTracker = ({ children }) => {
 
             // 2. Determine current UTC date and yesterday's UTC date
             const currentDateUTCString = getUTCDateString(currentTimestamp);
-            const lastPlayedDateUTCString = getUTCDateString(dbLastPlayed);
+            // const lastPlayedDateUTCString = getUTCDateString(dbLastPlayed); // Unused
 
             let newCurrentStreakCount = dbCurrentStreakCount;
             let newLastStreakCheckDateUTC = dbLastStreakCheckDateUTC;
             let newLongestStreakCount = dbLongestStreakCount;
             let streakMessageToDisplay = '';
             let didStreakChange = false;
-            let streakBroken = false;
+            // let streakBroken = false; // Unused
 
             const yesterdayUTC = new Date(currentTimestamp);
             yesterdayUTC.setUTCDate(yesterdayUTC.getUTCDate() - 1); // Subtract 1 day in UTC
@@ -353,7 +334,7 @@ const StreakTracker = ({ children }) => {
                 }
             } else {
                 // Scenario 4: Activity after a skipped UTC day(s) - Streak is broken
-                streakBroken = true;
+                // streakBroken = true;
                 streakMessageToDisplay = `💔 Oh no! Your ${dbCurrentStreakCount}-day streak was broken. New streak starts at 1 day.`;
                 newCurrentStreakCount = 1;
                 newLastStreakCheckDateUTC = currentDateUTCString;
@@ -388,7 +369,7 @@ const StreakTracker = ({ children }) => {
         } finally {
             setLoadingStreak(false);
         }
-    };
+    }, [user, db]);
 
     // Listen for real-time updates to display current streak in Navbar etc.
     useEffect(() => {
@@ -416,7 +397,7 @@ const StreakTracker = ({ children }) => {
 
         // Cleanup listener on unmount
         return () => unsubscribe();
-    }, [user.id, db]); // Depend on user.id and db instance
+    }, [user, db]); // Depend on user and db instance
 
     // Initial streak update on app load/user available from Telegram
     useEffect(() => {
@@ -429,7 +410,7 @@ const StreakTracker = ({ children }) => {
 
             return () => clearTimeout(timeoutId); // Cleanup timeout
         }
-    }, [user.id]); // Trigger when user object's ID becomes available
+    }, [user, updateStreak]); // Trigger when user object changes
 
     // Function to close the popup, exposed via context
     const closeStreakPopup = () => {
