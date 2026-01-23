@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   ChevronLeft,
-  Zap,
   Wallet as WalletIcon,
   ExternalLink,
   RefreshCw
@@ -13,9 +12,9 @@ import { useTelegram } from '../../reactContext/TelegramContext';
 
 export default function WalletComponent() {
   // Get wallet state and methods from context
-  const {user} = useTelegram()
+  const { user } = useTelegram()
 
-const userId = user.id
+  const userId = user.id
   const {
     isConnected,
     walletAddress,
@@ -64,8 +63,8 @@ const userId = user.id
       transactionType === 'Sent'
         ? '✅'
         : transactionType === 'Received'
-        ? '📥'
-        : '';
+          ? '📥'
+          : '';
     const date = tx.utime
       ? new Date(tx.utime * 1000).toLocaleString()
       : 'Unknown date';
@@ -136,8 +135,8 @@ const userId = user.id
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
         </div>
-      </div> 
-      
+      </div>
+
 
       {/* Top Navbar */}
       <header className="sticky top-0 z-10 bg-white/10 backdrop-blur-md p-4 border-b border-white/20 flex items-center justify-between">
@@ -161,10 +160,10 @@ const userId = user.id
             <p className="text-sm text-white/70 mb-6">
               Connect your TON wallet to view your balance and transactions
             </p>
-            
+
             {/* Custom Connect Button */}
             <button
-              onClick={()=>connectWallet(userId)}
+              onClick={() => connectWallet(userId)}
               disabled={isLoading}
               className="max-w-xs mx-auto py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
             >
@@ -182,7 +181,7 @@ const userId = user.id
             </button>
           </div>
         )}
-        
+
         {/* Connected: Show Wallet Info and Transactions */}
         {isConnected && (
           <div className="w-full space-y-6">
@@ -192,7 +191,7 @@ const userId = user.id
                 <h2 className="text-xl font-bold text-white">Wallet Information</h2>
                 {isLoading && <RefreshCw className="h-4 w-4 animate-spin text-white/70" />}
               </div>
-              
+
               <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4">
                 <div className="text-3xl font-bold">{tonBalance}</div>
                 <div className="flex items-center gap-2">
@@ -202,11 +201,11 @@ const userId = user.id
                   </span>
                 </div>
               </div>
-              
+
               <div className="mt-3 text-sm text-white/70 break-all">
                 <div className="flex items-center justify-between">
                   <span><strong>Address:</strong> {formatAddress(walletAddress)}</span>
-                  <a 
+                  <a
                     href={`https://tonscan.org/address/${walletAddress}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -248,8 +247,8 @@ const userId = user.id
                 )}
               </ul>
             </div>
-            
-            
+
+
           </div>
         )}
       </main>

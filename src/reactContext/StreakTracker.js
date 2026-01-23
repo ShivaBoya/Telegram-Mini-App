@@ -285,7 +285,7 @@ const StreakTracker = ({ children }) => {
             const currentTimestamp = Date.now(); // The exact time of this action (UTC milliseconds)
 
             // Get existing streak and activity data
-            const dbLastPlayed = userData.lastPlayed || 0;
+            // const dbLastPlayed = userData.lastPlayed || 0;
             const dbCurrentStreakCount = userData.streak?.currentStreakCount || 0;
             const dbLastStreakCheckDateUTC = userData.streak?.lastStreakCheckDateUTC || '';
             const dbLongestStreakCount = userData.streak?.longestStreakCount || 0;

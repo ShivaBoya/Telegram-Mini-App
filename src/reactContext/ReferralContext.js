@@ -258,44 +258,7 @@ export const ReferralProvider = ({ children }) => {
     return () => unsub();
   }, [user?.id]);
 
-  // DB updates
-  const updateScores = async (refId, amount) => {
-    // Update network_score
-    const scoreRef = ref(database, `users/${refId}/Score/network_score`);
-    const snap = await get(scoreRef);
-    const curr = snap.exists() ? snap.val() : 0;
-    await set(scoreRef, curr + amount);
 
-    // Update total_score
-    const totalRef = ref(database, `users/${refId}/Score/total_score`);
-    const totalSnap = await get(totalRef);
-    const tot = totalSnap.exists() ? totalSnap.val() : 0;
-    await set(totalRef, tot + amount);
-  };
-
-  const addReferralRecord = async (referrerId, referredId) => {
-    const referrerUserRef = ref(database, `users/${referrerId}`);
-    const userSnap = await get(referrerUserRef);
-
-    if (!userSnap.exists()) {
-      // Optionally create the user if this is a bug
-      await set(referrerUserRef, {
-        referrals: {}
-      });
-    }
-    // Add to referrer list and award
-    const refRef = ref(database, `users/${referrerId}/referrals`);
-    const snap = await get(refRef);
-    const list = snap.val() || {};
-    const exists = Object.values(list).includes(referredId);
-    if (exists) return;
-    const idx = Object.keys(list).length + 1;
-    await update(refRef, { [idx]: referredId });
-
-    // Award: referrer 100, referred 50
-    await updateScores(referrerId, 100);
-    await updateScores(referredId, 50);
-  };
 
   const shareToTelegram = () => window.open(`https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent('Join me and earn rewards!')}`, '_blank');
   const shareToWhatsApp = () => window.open(`https://wa.me/?text=${encodeURIComponent(`Join me and earn rewards! ${inviteLink}`)}`, '_blank');

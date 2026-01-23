@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, useMemo } from "react";
 import { ChevronLeft, Award, Zap, Users, Wallet, CheckSquare, BookOpen, PlayCircle, Send, Twitter, X } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
@@ -38,7 +38,9 @@ export default function TasksPage() {
   const [newsCount, setnewsCount] = useState(0);
   const [localScores, setLocalScores] = useState(null);
 
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   const userTasksRef = ref(database, `connections/${user.id}`);
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   const userScoreRef = ref(database, `users/${user.id}/Score`);
   const userId = user.id;
 
@@ -139,7 +141,7 @@ export default function TasksPage() {
       unsubscribeUserTasks();
       unsubscribeScores();
     };
-  }, [user.id]);
+  }, [user.id, userTasksRef, userScoreRef]);
 
   //Use localScores for real-time updates, fallback to context
   const scoreData = localScores || scores;
@@ -176,7 +178,7 @@ export default function TasksPage() {
     // Map specific dynamic progress
     if (task.title && task.title.toLowerCase().includes('news')) {
       completedVal = newsCount;
-    } else if (task.id == 7 || (task.title && task.title.toLowerCase().includes('500 points'))) {
+    } else if (task.id === 7 || (task.title && task.title.toLowerCase().includes('500 points'))) {
       completedVal = weeklyPoints;
     }
 
