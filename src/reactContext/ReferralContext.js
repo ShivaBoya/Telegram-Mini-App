@@ -228,18 +228,18 @@ export const ReferralProvider = ({ children }) => {
 
 
 
-  // Generate invite link
+
   useEffect(() => {
     if (user?.id) {
       const code = btoa(`${user.id}_${Date.now()}`)
         .replace(/[^a-zA-Z0-9]/g, '')
         .substring(0, 12);
-      setInviteLink(`https://t.me/Web3today_bot?startapp=ref_${code}_${user.id}`);
+      setInviteLink(`https://t.me/Web3TodayGameApp_bot?startapp=ref_${code}_${user.id}`);
     }
   }, [user?.id]);
 
 
-  // Fetch invited friends list
+
   useEffect(() => {
     if (!user?.id) return;
     const referralsRef = ref(database, `users/${user.id}/referrals`);
