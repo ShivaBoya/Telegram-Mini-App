@@ -39,9 +39,9 @@ export default function TasksPage() {
   const [localScores, setLocalScores] = useState(null);
 
   /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  const userTasksRef = ref(database, `connections/${user.id}`);
+  const userTasksRef = useMemo(() => ref(database, `connections/${user.id}`), [user.id]);
   /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  const userScoreRef = ref(database, `users/${user.id}/Score`);
+  const userScoreRef = useMemo(() => ref(database, `users/${user.id}/Score`), [user.id]);
   const userId = user.id;
 
   const isToday = (timestamp) => {
@@ -599,7 +599,7 @@ export default function TasksPage() {
             </div>
           </div>
 
-          <Tabs defaultValue="daily" className="mb-6">
+          <Tabs value={activeTab} className="mb-6">
             <TabsList className="flex gap-4 bg-white/10 p-0.5 overflow-auto scroll-hidden">
               {["daily", "weekly", "achievements", "all", "watch", "social", "partnership", "misc"].map((tab) => (
                 <TabsTrigger

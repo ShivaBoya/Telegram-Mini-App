@@ -111,7 +111,7 @@ export const useReferral = () => useContext(ReferralContext);
 
 export const ReferralProvider = ({ children }) => {
   const { user } = useTelegram();
-  const [hasReferred, setHasReferred] = useState(false);
+
   const [inviteLink, setInviteLink] = useState('');
   const [invitedFriends, setInvitedFriends] = useState([]);
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
@@ -170,6 +170,44 @@ export const ReferralProvider = ({ children }) => {
   //       });
   //     });
   // }, []);
+  // DB updates - wrapped in useCallback
+  const updateScores = React.useCallback(async (refId, amount) => {
+    // Update network_score
+    const scoreRef = ref(database, `users/${refId}/Score/network_score`);
+    const snap = await get(scoreRef);
+    const curr = snap.exists() ? snap.val() : 0;
+    await set(scoreRef, curr + amount);
+
+    // Update total_score
+    const totalRef = ref(database, `users/${refId}/Score/total_score`);
+    const totalSnap = await get(totalRef);
+    const tot = totalSnap.exists() ? totalSnap.val() : 0;
+    await set(totalRef, tot + amount);
+  }, []);
+
+  const addReferralRecord = React.useCallback(async (referrerId, referredId) => {
+    const referrerUserRef = ref(database, `users/${referrerId}`);
+    const userSnap = await get(referrerUserRef);
+
+    if (!userSnap.exists()) {
+      await set(referrerUserRef, {
+        referrals: {}
+      });
+    }
+    // Add to referrer list and award
+    const refRef = ref(database, `users/${referrerId}/referrals`);
+    const snap = await get(refRef);
+    const list = snap.val() || {};
+    const exists = Object.values(list).includes(referredId);
+    if (exists) return;
+    const idx = Object.keys(list).length + 1;
+    await update(refRef, { [idx]: referredId });
+
+    // Award: referrer 100, referred 50
+    await updateScores(referrerId, 100);
+    await updateScores(referredId, 50);
+  }, [updateScores]);
+
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
     if (!tg) {
@@ -182,22 +220,17 @@ export const ReferralProvider = ({ children }) => {
 
     const startParam = tg.initDataUnsafe?.start_param;
     const referredId = tg.initDataUnsafe?.user?.id;
-    // console.log('[Referral] startParam:', startParam);
-    // console.log('[Referral] referredId:', referredId);
 
     if (!startParam || !referredId) {
-      // console.log('[Referral] Missing startParam OR referredId → abort');
       return;
     }
 
     /* last "_" split */
-    // const [ , , referrerId ] = startParam.split(/_(?=[^_]+$)/);
     const parts = startParam.split('_');
     const referrerId = parts[2];
     console.log('[Referral] referrerId:', referrerId);
 
     if (!referrerId || referrerId === String(referredId)) {
-      // console.log('[Referral] No referrerId OR self-referral → abort');
       return;
     }
 
@@ -213,18 +246,13 @@ export const ReferralProvider = ({ children }) => {
         console.log('[Referral] addReferralRecord resolved – show popup');
         localStorage.setItem(key, 'done');
         setShowWelcomePopup(true)
-        // tg.showPopup({
-        //   title: 'Referral Bonus!',
-        //   message: 'You have earned 50 XP for joining through a referral!',
-        //   buttons: [{ type: 'ok' }]
-        // });
       })
       .catch(err => {
         console.error('[Referral] addReferralRecord rejected:', err);
         tg.showAlert('Could not save referral, please try again later.');
       });
 
-  }, [user.id]);
+  }, [user.id, addReferralRecord]);
 
 
 
