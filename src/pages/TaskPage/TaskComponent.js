@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import TasksList from './TasksList';
-import Tabs from "./Tabs"
-import Footer from "../../components/Footer.js"
-import "../../Styles/TaskComponent.css"
+import Tabs from "./Tabs";
+import Footer from "../../components/Footer.js";
+import "../../Styles/TaskComponent.css";
 
-
-// Import Firebase methods
 import { ref, get } from "firebase/database";
 import { database } from '../../services/FirebaseConfig';
 
@@ -15,16 +13,23 @@ function TaskComponent() {
   const [currentTab, setCurrentTab] = useState('all');
   const [userScore, setUserScore] = useState(0);
 
+  // Getting userId from localStorage
   const userId = localStorage.getItem("firebaseid");
 
+  // Using useCallback or defining inside useEffect prevents 
+  // "missing dependency" warnings for the functions themselves.
   useEffect(() => {
+    if (!userId) return;
+
     const fetchTasks = async () => {
       try {
         const tasksRef = ref(database, "tasks");
         const connectionsRef = ref(database, `connections/${userId}`);
 
-        const tasksSnapshot = await get(tasksRef);
-        const connectionsSnapshot = await get(connectionsRef);
+        const [tasksSnapshot, connectionsSnapshot] = await Promise.all([
+          get(tasksRef),
+          get(connectionsRef)
+        ]);
 
         setTasks(tasksSnapshot.val() || {});
         setCompletedTasks(connectionsSnapshot.val() || {});
@@ -34,14 +39,19 @@ function TaskComponent() {
     };
 
     const fetchUserScore = async () => {
-      const userScoreRef = ref(database, `users/${userId}/Score`);
-      const scoreSnapshot = await get(userScoreRef);
-      setUserScore(scoreSnapshot.val()?.task_score || 0);
+      try {
+        const userScoreRef = ref(database, `users/${userId}/Score`);
+        const scoreSnapshot = await get(userScoreRef);
+        // Using optional chaining to safely get the score
+        setUserScore(scoreSnapshot.val()?.task_score || 0);
+      } catch (err) {
+        console.error("Error fetching score:", err);
+      }
     };
 
     fetchTasks();
     fetchUserScore();
-  }, [userId]);
+  }, [userId]); // ✅ Fixed: Dependency array is now complete
 
   const changeTab = (newTab) => setCurrentTab(newTab);
 
@@ -49,15 +59,21 @@ function TaskComponent() {
     <>
       <div className="task-container">
         <header>
-          <h2>Tasks <span id="user-xp" className="points">{userScore}</span></h2>
+          <h2>
+            Tasks <span id="user-xp" className="points">{userScore}</span>
+          </h2>
         </header>
-        <Tabs currentTab={currentTab} changeTab={changeTab} />
-        <TasksList tasks={tasks} completedTasks={completedTasks} currentTab={currentTab} />
 
+        <Tabs currentTab={currentTab} changeTab={changeTab} />
+        <TasksList
+          tasks={tasks}
+          completedTasks={completedTasks}
+          currentTab={currentTab}
+        />
       </div>
+
       <Footer />
     </>
-
   );
 }
 
